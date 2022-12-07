@@ -1,5 +1,5 @@
-# simple-forum
-simple forum in node.js, personal project for training purposes.
+# Simple Forum
+Simple forum in node.js, personal project for training purposes, that's why the name is simple-forum, because it's simple, and it's a forum. And i'm not a creative person.
 
 To run it simply install all packages(both in the server folder and the client one) with:
 ```
