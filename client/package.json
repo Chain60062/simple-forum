@@ -1,0 +1,32 @@
+{
+  "name": "client",
+  "version": "1.0.0",
+  "description": "Frontend do forum sem nome em React",
+  "main": "src/index.js",
+  "scripts": {
+    "build": "./node_modules/.bin/esbuild src/index.js --minify --loader:.js=jsx --jsx=automatic --sourcemap=external --bundle --outfile=dist/build.js",
+    "watch": "npm run build -- --watch"
+  },
+  "keywords": [
+    "esbuild",
+    "react",
+    "forum",
+    "internet-forum"
+  ],
+  "author": "Vinicius Miranda",
+  "license": "MIT",
+  "dependencies": {
+    "@stitches/react": "^1.2.8",
+    "esbuild": "^0.15.18",
+    "prop-types": "^15.8.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-icons": "^4.7.1",
+    "react-router-dom": "^6.4.4"
+  },
+  "devDependencies": {
+    "eslint": "^8.29.0",
+    "eslint-plugin-react": "^7.31.11",
+    "prettier": "2.8.0"
+  }
+}
