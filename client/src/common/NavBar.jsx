@@ -1,37 +1,22 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { TiThMenu } from 'react-icons/ti';
-import { TopNavBody, TopNavIcon, TopNavLink } from '../Styles/TopNav';
+import { TopNavBody, TopNavIcon, TopNavLink } from '../styles/TopNav';
 
-const FrontPage = () => {
-  return (
-    <>
-      <TopNavBar />
-      <Topics></Topics>
-    </>
-  );
-};
-const Topics = (props) =>{
-  return(
-    <div>
-      
-    </div>
-  );
-}
-const TopBarLink = (props) => {
+const NavBarLink = (props) => {
   return (
     <TopNavLink collapsed={props.isCollapsed}>{props.linkText}</TopNavLink>
   );
 };
 
-const TopNavBar = () => {
+const NavBar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   return (
     <nav>
       <TopNavBody>
-        <TopBarLink isCollapsed={isCollapsed} linkText='Home' />
-        <TopBarLink isCollapsed={isCollapsed} linkText='About' />
-        <TopBarLink isCollapsed={isCollapsed} linkText='Login' />
+        <NavBarLink isCollapsed={isCollapsed} linkText='Home' />
+        <NavBarLink isCollapsed={isCollapsed} linkText='About' />
+        <NavBarLink isCollapsed={isCollapsed} linkText='Login' />
 
         <TopNavIcon
           as={TiThMenu}
@@ -46,11 +31,9 @@ const TopNavBar = () => {
   );
 };
 
-// Type Checking
-TopBarLink.propTypes = {
+NavBarLink.propTypes = {
   isCollapsed: PropTypes.bool,
   linkText: PropTypes.string,
 };
 
-export default FrontPage;
-
+export default NavBar;

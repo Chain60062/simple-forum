@@ -14,14 +14,14 @@ export const TopNavLink = styled('a', {
   textDecoration: 'none',
   fontSize: '18px',
   '&:not(:first-child)': {
-    '@breakpointMax600': {
+    '@breakpoint600': {
       display: 'none',
     },
   },
   variants: {
     collapsed: {
       true: {
-        '@breakpointMax900': {
+        '@breakpoint900': {
           float: 'none',
           display: 'block !important',
           textAlign: 'left',
@@ -38,14 +38,14 @@ export const TopNavLink = styled('a', {
 export const TopNavIcon = styled('a', {
   color: 'white',
   display: 'none',
-  '@breakpointMax900': {
+  '@breakpoint900': {
     float: 'right',
     display: 'block',
   },
   variants: {
     collapsed: {
       true: {
-        '@breakpointMax900': {
+        '@breakpoint900': {
           position: 'absolute',
           right: '0',
           top: '0',
