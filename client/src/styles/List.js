@@ -2,13 +2,16 @@ import stitches from '../stitches';
 const { styled } = stitches;
 
 export const ListInnerContainer = styled('div', {
-  minHeight: '85vh',
-  minWidth: '70vw',
+  backgroundColor: '$primary', 
+  minHeight: '80vh',
+  minWidth: '80vw',
   height: '80%',
   marginTop: '$lg',
   borderRadius: '18px',
-  background: 'linear-gradient(150deg, rgba(161,16,98,1) 30%, rgba(104,15,247,1) 74%)',
   boxShadow: '2px 2px 8px 0 rgba(0, 0, 0, 0.3)',
+  '@breakpoint600': {
+    minWidth: '90vw',
+  },
 });
 
 export const ListOuterContainer = styled('div', {
@@ -21,14 +24,13 @@ export const ListCard = styled('div', {
   minHeight: '64px',
   boxShadow: '2px 2px 6px 0 rgba(0, 0, 0, 0.3)',
   borderRadius: '12px',
-  margin: '.5rem 2rem .5rem 2rem',
-  backgroundColor: 'white',
+  margin: '.8rem 2rem .8rem 2rem',
+  color: 'white',
+  backgroundColor: '$primaryShade',
   padding: '$xs',
-  transition:
-    'background-color ease-out 200ms, color ease-out 200ms',
+  transition: 'background-color ease-out 200ms, color ease-out 200ms',
   '&:hover': {
-    backgroundColor: '$primaryFade',
-    color: 'white',
+    backgroundColor: '$primaryBright',
   },
   '&:first-child': {
     marginTop: '2rem',
@@ -42,4 +44,12 @@ export const ListCardDescription = styled('div', {
   fontSize: '12px',
   marginTop: '$xs',
 });
+export const Title = styled('h1', {
+  color: 'white',
+  textAlign: 'center',
+  margin: '12px',
+  fontFamily: `'Quicksand', sans-serif`,
+  fontSize: '38px',
+});
+
 

@@ -1,16 +1,50 @@
 import React from 'react';
-import { Form } from 'react-router-dom'
+import { HiOutlineUser, HiOutlineLockClosed, HiMail } from 'react-icons/hi';
+import {
+  Container,
+  Title,
+  InputIcon,
+  Input,
+  SubmitButton,
+  StyledGridForm,
+} from '../styles/Forms';
+
 const SignupPage = () => {
-    return (
-        <Form method='post' action=''>
-            <input type="text" name='Nome do Usuário'></input>
-            <input type="text" name='Apelido'></input>
-            <input type="email" name='E-mail'></input>
-            <input type="password" name='Senha'></input>
-            <input type="password" name='Confirmar Senha'></input>
-            <button type="submit">Entrar</button>
-        </Form>
-    );
-}
+  return (
+    <Container>
+        <Title>Criar Conta</Title>
+        <StyledGridForm method='post' action=''>
+          <div>
+            <InputIcon>
+              <HiOutlineUser />
+            </InputIcon>
+            <Input type='text' placeholder='Nickname'></Input>
+          </div>
+          <div>
+            <InputIcon>
+              <HiMail />
+            </InputIcon>
+            <Input type='email' placeholder='E-mail'></Input>
+          </div>
+          <div>
+            <InputIcon>
+              <HiOutlineLockClosed />
+            </InputIcon>
+            <Input type='password' placeholder='Senha'></Input>
+          </div>
+          <div>
+            <InputIcon>
+              <HiOutlineLockClosed />
+            </InputIcon>
+            <Input type='password' placeholder='Confirmar Senha'></Input>
+          </div>
+          <div>
+            <SubmitButton type='submit' value='Botao'></SubmitButton>
+          </div>
+        </StyledGridForm>
+    </Container>
+  );
+};
 
 export default SignupPage;
+
