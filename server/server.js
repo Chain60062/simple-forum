@@ -7,13 +7,14 @@ import { randomUUID } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import routes from './src/routes/index.js';
 import errorHandler from './src/middleware/error.js';
+import cors from 'cors';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const port = process.env.PORT || 8081;
 const secret = process.env.SECRET || 'supersecretkey';
-
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 // session
 app.use(
@@ -39,5 +40,4 @@ app.use(routes);
 // error handler
 app.use(errorHandler);
 app.listen(port, console.log(`Rodando na porta: ${port}`));
-
 

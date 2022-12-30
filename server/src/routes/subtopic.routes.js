@@ -1,11 +1,12 @@
 import { Router } from 'express';
-import { addSubtopic, deleteSubtopic, editSubtopic, listSubtopics } from '../model/topic.model.js';
+import { addSubtopic, deleteSubtopic, editSubtopic, listSubtopics } from '../model/subtopic.model.js';
 const router = Router();
 
-router.get('/', listSubtopics);
+router.get('/:topicId', listSubtopics);
 router.post('/:topicId', addSubtopic);
 router.patch('/:id', editSubtopic);
 router.delete('/:id', deleteSubtopic);
 
 export default router;
+
 

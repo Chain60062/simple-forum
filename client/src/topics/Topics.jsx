@@ -9,7 +9,7 @@ const Topics = () => {
 
   if (error) return <h1>Ops! Algo deu errado</h1>;
   if (isLoading) return <List>Carregando...</List>;
-  console.log(data[0].topic_id);
+
   return (
     <List title='Principais Tópicos'>
       {data.map((topic, index) => (
@@ -17,11 +17,7 @@ const Topics = () => {
           key={index}
           title={topic.topic_name}
           description={topic.description}
-          topicId={topic.topic_id}
-          link={`${topic.topic_name
-            .replace(/\s+/g, '-')
-            .toLowerCase()}/subtopics`}
-          state={topic.topic_id}
+          link={`${topic.topic_id}/subtopics`}
         />
       ))}
     </List>

@@ -9,6 +9,7 @@ import SignupPage from './signup-page/SignupPage';
 import Loading from './styles/Loading';
 import Navigation from './common/Navigation';
 import Topics from './topics/Topics';
+import Posts from './posts/Posts';
 
 const router = createBrowserRouter([
   {
@@ -21,27 +22,31 @@ const router = createBrowserRouter([
         element: <Topics />,
       },
       {
-        path: '/:topic/subtopics',
+        path: ':topicId/subtopics',
         element: <Subtopics />,
       },
       {
-        path: '/:subtopic/posts',
+        path: ':subtopic/posts',
         element: <ProfilePage />,
       },
       {
-        path: '/:user/profile',
+        path: ':user/profile',
         element: <ProfilePage />,
       },
       {
-        path: '/login',
+        path: 'login',
         element: <LoginPage />,
       },
       {
-        path: '/cadastro',
+        path: 'cadastro',
         element: <SignupPage />,
       },
     ],
   },
+  {
+    path:':topicId/subtopics/:subtopicId/posts',
+    element: <Posts />
+  }
 ]);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

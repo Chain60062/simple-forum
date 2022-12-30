@@ -3,8 +3,9 @@ import { jsonMessage } from '../helpers/jsonResponse.js';
 
 export const addTopic = async (req, res, next) => {
   try {
-    const sqlQuery = 'INSERT INTO topic(topic_name, description) VALUES($1, $2)';
+    const sqlQuery = 'INSERT INTO topic(topic_name, description) VALUES($1, $2, $3)';
     const { name, description } = req.body;
+
     await pool.query(sqlQuery, [name, description]);
 
     jsonMessage(res, 201, 'Tópico criado com sucesso');
@@ -38,7 +39,9 @@ export const editTopic = async (req, res, next) => {
 };
 export const listTopics = async (req, res, next) => {
   try {
-    const topics = pool.query('SELECT subtopic_name, description FROM topic ORDER BY topic_name');
+    const topics = await pool.query(
+      'SELECT topic_id, topic_name, description FROM topic ORDER BY topic_name',
+    );
 
     res.status(200).json(topics.rows);
   } catch (err) {

@@ -81,7 +81,7 @@ export const listPostsBySubtopic = async (req, res, next) => {
     const id = req.params.id;
     //pega user_id e os posts associados
     let posts = await pool.query(
-      'SELECT message, array_to_json(array_agg(file_path)) as files, created_at FROM post p JOIN file f ON p.post_id = f.post_id WHERE subtopic_id = $1 GROUP BY p.post_id',
+      'SELECT message, array_to_json(array_agg(file_path)) as files, title, created_at FROM post p LEFT JOIN file f ON p.post_id = f.post_id WHERE subtopic_id = $1 GROUP BY p.post_id',
       [id],
     );
     res.status(200).json(posts.rows);
@@ -93,7 +93,7 @@ export const listPostsByUser = async (req, res, next) => {
   try {
     const userId = req.params.userId; //pega user_id e os posts associados
     const posts = await pool.query(
-      'SELECT message, array_to_json(array_agg(file_path)) as files, created_at FROM post p JOIN file f ON p.post_id = f.post_id WHERE p.profile_id = $1 GROUP BY p.post_id',
+      'SELECT message, array_to_json(array_agg(file_path)), title, created_at as files, created_at FROM post p LEFT JOIN file f ON p.post_id = f.post_id WHERE p.profile_id = $1 GROUP BY p.post_id',
       [userId],
     );
     res.status(200).json(posts.rows);
@@ -111,4 +111,5 @@ export const listPostReplies = async (req, res, next) => {
     next(err);
   }
 };
+
 

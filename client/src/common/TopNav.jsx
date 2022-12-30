@@ -5,7 +5,6 @@ import { TopNavBody, TopNavIcon, NavLink } from '../styles/TopNav';
 const TopNav = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   return (
-    <nav>
       <TopNavBody>
         <NavLink collapsed={isCollapsed} to='/'>Home</NavLink>
         <NavLink collapsed={isCollapsed}>Sneed</NavLink>
@@ -25,7 +24,6 @@ const TopNav = () => {
           }}
         ></TopNavIcon>
       </TopNavBody>
-    </nav>
   );
 };
 

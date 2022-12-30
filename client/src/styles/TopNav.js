@@ -3,11 +3,11 @@ import { Link } from 'react-router-dom';
 const { styled } = stitches;
 
 export const TopNavBody = styled('div', {
-  overflow: 'hidden',
   backgroundColor: '$secondary',
+  overflow: 'hidden',
+  gridArea: 'topnav',
 });
 export const NavLink = styled(Link, {
-  display: 'block',
   float: 'left',
   color: 'white',
   borderRadius: '12px',
@@ -38,7 +38,7 @@ export const NavLink = styled(Link, {
   },
 });
 
-export const TopNavIcon = styled(Link, {
+export const TopNavIcon = styled('a', {
   color: 'white',
   display: 'none',
   '@breakpoint900': {

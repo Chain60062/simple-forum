@@ -8,7 +8,7 @@ export const ListInnerContainer = styled('div', {
   height: '80%',
   marginTop: '$lg',
   borderRadius: '18px',
-  boxShadow: '2px 2px 8px 0 rgba(0, 0, 0, 0.3)',
+  boxShadow: '2px 2px 6px 0 rgba(0, 0, 0, 0.3)',
   '@breakpoint600': {
     minWidth: '90vw',
   },

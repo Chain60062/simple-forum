@@ -5,6 +5,9 @@ const stitches = createStitches({
     breakpoint600: '(max-width: 600px)',
     breakpoint900: '(max-width: 900px)',
     breakpoint1100: '(max-width: 1100px)',
+    breakpointMin600: '(min-width: 600px)',
+    breakpointMin900: '(min-width: 900px)',
+    breakpointMin1200: '(min-width: 1200px)',
   },
   theme: {
     colors: {
@@ -50,16 +53,13 @@ const injectGlobalStyles = stitches.globalCss({
     fontFamily: `'Comfortaa', cursive`,
     backgroundColor: '#fff7fc',
   },
-
+  'html, body': {
+    height: '100%',
+  },
   h1: { margin: 0 },
 });
 
 injectGlobalStyles();
 
 export default stitches;
-
-
-
-
-
 

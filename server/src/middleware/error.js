@@ -1,4 +1,4 @@
-const errorHandler = (error, req, res, next) => {
+const errorHandler = (error, req, res) => {
   // Error handling middleware functionality
   console.log(`error ${error.message}`); // log the error
   const status = error.status || 400;
