@@ -3,7 +3,7 @@ import { jsonMessage } from '../helpers/jsonResponse.js';
 
 export const addTopic = async (req, res, next) => {
   try {
-    const sqlQuery = 'INSERT INTO topic(topic_name, description) VALUES($1, $2, $3)';
+    const sqlQuery = 'INSERT INTO topic(topic_name, description) VALUES($1, $2)';
     const { name, description } = req.body;
 
     await pool.query(sqlQuery, [name, description]);
@@ -39,6 +39,7 @@ export const editTopic = async (req, res, next) => {
 };
 export const listTopics = async (req, res, next) => {
   try {
+    console.log(req.session.user)
     const topics = await pool.query(
       'SELECT topic_id, topic_name, description FROM topic ORDER BY topic_name',
     );

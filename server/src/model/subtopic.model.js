@@ -41,12 +41,10 @@ export const editSubtopic = async (req, res, next) => {
 export const listSubtopics = async (req, res, next) => {
   try {
     const topicId = req.params.topicId;
-    console.log(topicId);
     const subtopics = await pool.query(
       'SELECT subtopic_id, subtopic_name, description FROM subtopic WHERE topic_id = $1 ORDER BY subtopic_name',
       [topicId],
     );
-    console.log(subtopics.rows);
     res.status(200).json(subtopics.rows);
   } catch (err) {
     next(err);

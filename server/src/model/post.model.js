@@ -1,9 +1,9 @@
 import pool from '../config/db.js';
 import { jsonMessage } from '../helpers/jsonResponse.js';
 import { unlink } from 'fs';
-// 157ec092-0b2e-4eeb-894a-c69d7af3053b
+
 export const addReply = async (req, res, next) => {
-  createPost(req, res, next, true);
+  createPost(req, res, next);
 };
 export const addPost = async (req, res, next) => {
   createPost(req, res, next);
@@ -12,21 +12,25 @@ async function createPost(req, res, next) {
   try {
     const userId = req.session.user.profile_id;
     const subtopicId = req.params.subtopicId;
-    const { message } = req.body;
+    const { message, title } = req.body;
     const files = req.files;
     const fileQuery = 'INSERT INTO file(post_id, reply_id, file_path) VALUES($1, $2, $3)';
     const postQuery =
-      'INSERT INTO post(profile_id, subtopic_id, message) VALUES($1, $2, $3) RETURNING *';
+      'INSERT INTO post(profile_id, subtopic_id, title, message) VALUES($1, $2, $3, $4) RETURNING *';
 
-    const post = await pool.query(postQuery, [userId, subtopicId, message]);
+    const post = await pool.query(postQuery, [userId, subtopicId, title, message]);
 
-    Promise.all(
-      files.map((file) => {
-        pool.query(fileQuery, [post.rows[0].post_id, null, file.path]);
-      }),
-    )
-      .then(res.status(200).json({ message: post.rows[0].message }))
-      .catch(next);
+    if (typeof files != 'undefined') {
+      Promise.all(
+        files.map((file) => {
+          pool.query(fileQuery, [post.rows[0].post_id, null, file.path]);
+        }),
+      )
+        .then(res.status(200).json({ message: post.rows[0].message }))
+        .catch(next);
+    } else {
+      return res.status(200).json({ message: post.rows[0].message });
+    }
   } catch (err) {
     next(err);
   }
@@ -45,7 +49,7 @@ export const deletePost = async (req, res, next) => {
       .then(() => {
         for (const file of files.rows) {
           unlink(`${file.file_path}`, (err) => {
-            if (err) next;
+            if (err) next(err);
           });
         }
         jsonMessage(res, 200, 'Post deletado com sucesso');
@@ -81,7 +85,7 @@ export const listPostsBySubtopic = async (req, res, next) => {
     const id = req.params.id;
     //pega user_id e os posts associados
     let posts = await pool.query(
-      'SELECT message, array_to_json(array_agg(file_path)) as files, title, created_at FROM post p LEFT JOIN file f ON p.post_id = f.post_id WHERE subtopic_id = $1 GROUP BY p.post_id',
+      'SELECT p.post_id, message, array_to_json(array_agg(file_path)) as files, title, created_at FROM post p LEFT JOIN file f ON p.post_id = f.post_id WHERE subtopic_id = $1 GROUP BY p.post_id ORDER BY created_at DESC',
       [id],
     );
     res.status(200).json(posts.rows);
@@ -93,7 +97,7 @@ export const listPostsByUser = async (req, res, next) => {
   try {
     const userId = req.params.userId; //pega user_id e os posts associados
     const posts = await pool.query(
-      'SELECT message, array_to_json(array_agg(file_path)), title, created_at as files, created_at FROM post p LEFT JOIN file f ON p.post_id = f.post_id WHERE p.profile_id = $1 GROUP BY p.post_id',
+      'SELECT p.post_id, message, array_to_json(array_agg(file_path)), title, created_at as files, created_at FROM post p LEFT JOIN file f ON p.post_id = f.post_id WHERE p.profile_id = $1 GROUP BY p.post_id ORDER BY created_at DESC',
       [userId],
     );
     res.status(200).json(posts.rows);
@@ -111,5 +115,4 @@ export const listPostReplies = async (req, res, next) => {
     next(err);
   }
 };
-
 

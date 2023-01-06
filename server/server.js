@@ -14,7 +14,12 @@ const port = process.env.PORT || 8081;
 const secret = process.env.SECRET || 'supersecretkey';
 const app = express();
 
-app.use(cors());
+app.use(
+  cors({
+    credentials: true,
+    origin: 'http://localhost:5173',
+  }),
+);
 app.use(express.json());
 // session
 app.use(
@@ -27,6 +32,7 @@ app.use(
     cookie: {
       secure: 'auto',
       maxAge: 5184000000, //maxAge 45 dias
+      sameSite: 'none'
     },
   }),
 );

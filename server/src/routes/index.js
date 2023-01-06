@@ -5,7 +5,6 @@ import postRouter from './post.routes.js';
 import topicRouter from './topic.routes.js';
 import subtopicRouter from './subtopic.routes.js';
 import replyRouter from './reply.routes.js';
-// import subtopicRouter from './subtopic.routes.js';
 
 const router = new Router();
 router.use('/user', userRouter);

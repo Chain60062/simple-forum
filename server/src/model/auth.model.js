@@ -4,22 +4,26 @@ import { jsonMessage } from '../helpers/jsonResponse.js';
 // Login
 export const signIn = async (req, res, next) => {
   const { password, email } = req.body;
-  // encontrar usuario por email
   const user = await pool.query('SELECT * FROM profile WHERE email = $1', [email]);
-  if (typeof user == 'undefined' || user.rowCount == 0)
-    jsonMessage(res, 404, 'Usuário não encontrado');
+  if (user.rowCount == 0) return jsonMessage(res, 401, 'Credenciais fornecidas estão incorretas');
   await argon2
     .verify(user.rows[0].cipher, password, {
-      parallelism: 2, //2 threads
+      parallelism: 2,
     })
-    .then(() => {
-      // remover senha por segurança
-      delete user.rows[0].cipher;
-      // inserir usuario sem a senha na sessao
-      req.session.user = user.rows[0];
-      jsonMessage(res, 200, 'Usuário entrou com sucesso');
+    .then((match) => {
+      if (match) {
+        // remover senha por segurança
+        delete user.rows[0].cipher;
+
+        req.session.user = user.rows[0];
+        
+        return jsonMessage(res, 200, 'Usuário entrou com sucesso');
+      }
+      return jsonMessage(res, 401, 'Credenciais fornecidas estão incorreta');
     })
-    .catch(next);
+    .catch((err) => {
+      next(err);
+    });
 };
 // Logout
 export const signOut = async (req, res) => {
