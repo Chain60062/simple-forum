@@ -5,13 +5,14 @@ import path from 'node:path';
 import fs from 'node:fs';
 import { randomUUID } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
-import routes from './src/routes/index.js';
-import errorHandler from './src/middleware/error.js';
+import routes from './routes/index.js';
+import errorHandler from './middleware/error.js';
 import cors from 'cors';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const port = process.env.PORT || 8081;
 const secret = process.env.SECRET || 'supersecretkey';
+const environment = process.env.NODE_ENV || 'development';
 const app = express();
 
 app.use(
@@ -24,15 +25,15 @@ app.use(express.json());
 // session
 app.use(
   session({
-    name: 'myforum_sessioncookie',
+    name: 'simpleforumuser',
     secret,
     resave: true,
     saveUninitialized: false,
     genid: () => randomUUID(),
     cookie: {
-      secure: 'auto',
       maxAge: 5184000000, //maxAge 45 dias
-      sameSite: 'none'
+      secure: 'auto',
+      sameSite: environment == 'production' ? 'none' : 'lax',
     },
   }),
 );

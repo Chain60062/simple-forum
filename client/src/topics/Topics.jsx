@@ -1,20 +1,32 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import List, { Card } from '../common/List';
-import useSWR from 'swr';
-const fetcher = (...args) => fetch(...args).then((res) => res.json());
 const url = import.meta.REACT_APP_SERVER_URL || 'http://localhost:8085';
 
 const Topics = () => {
-  const { data, error, isLoading } = useSWR(`${url}/topics`, fetcher);
+  const [topics, setTopics] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  if (error) return <h1>Ops! Algo deu errado</h1>;
-  if (isLoading) return <List>Carregando...</List>;
+  useEffect(() => {
+    fetch(`${url}/topics`)
+      .then((res) => res.json())
+      .then(
+        (data) => {
+          setLoading(false);
+          setTopics(data);
+        },
+        (err) => {
+          setLoading(true);
+          setError(err);
+        }
+      );
+  }, []);
 
   return (
     <List title='Principais Tópicos'>
-      {data.map((topic, index) => (
+      {!loading && topics.map((topic) => (
         <Card
-          key={index}
+          key={topic.topic_id}
           title={topic.topic_name}
           description={topic.description}
           link={`${topic.topic_id}/subtopics`}

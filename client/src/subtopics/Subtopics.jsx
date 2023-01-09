@@ -1,26 +1,34 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import List, { Card } from '../common/List';
 import PropTypes from 'prop-types';
-import useSWR from 'swr';
 import { useParams } from 'react-router-dom';
-const fetcher = (...args) => fetch(...args).then((res) => res.json());
 const url = import.meta.REACT_APP_SERVER_URL || 'http://localhost:8085';
 
 const Subtopics = () => {
   const { topicId } = useParams();
-  const { data, error, isLoading } = useSWR(
-    `${url}/subtopics/${topicId}`,
-    fetcher
-  );
+  const [subtopics, setSubtopics] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  if (error) return <h1>Ops! Algo deu errado</h1>;
-  if (isLoading) return <List>Carregando...</List>;
-
+  useEffect(() => {
+    fetch(`${url}/subtopics/${topicId}`)
+      .then((res) => res.json())
+      .then(
+        (data) => {
+          setLoading(false);
+          setSubtopics(data);
+        },
+        (err) => {
+          setLoading(true);
+          setError(err);
+        }
+      );
+  }, []);
   return (
     <List title='Subtópicos'>
-      {data.map((subtopic, index) => (
+      {!loading && subtopics.map((subtopic) => (
         <Card
-          key={index}
+          key={subtopic.subtopic_id}
           title={subtopic.subtopic_name}
           description={subtopic.description}
           link={`${subtopic.subtopic_id}/posts`}
@@ -34,6 +42,4 @@ Subtopics.propTypes = {
 };
 
 export default Subtopics;
-
-
 

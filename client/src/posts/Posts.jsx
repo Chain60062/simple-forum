@@ -1,11 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import TopNav from '../common/TopNav';
-import mock2 from '../assets/mock2.jpg';
 import mock from '../assets/mock.jpg';
 import PropTypes from 'prop-types';
-import useSWR from 'swr';
 import stitches from '../stitches';
-const fetcher = (...args) => fetch(...args).then((res) => res.json());
 const { styled } = stitches;
 const url = import.meta.REACT_APP_SERVER_URL || 'http://localhost:8085';
 import {
@@ -25,69 +22,127 @@ import {
 import { useParams } from 'react-router-dom';
 
 const Posts = () => {
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const { subtopicId } = useParams();
-  const { data, error, isLoading } = useSWR(
-    `${url}/posts/subtopic/${subtopicId}`,
-    fetcher
-  );
+  const [title, setTitle] = useState('');
+  const [message, setMessage] = useState('');
+  const [responseMessage, setResponseMessage] = useState('');
 
-  if (error) return <h1>Ops! Algo deu errado</h1>;
-  if (isLoading) return <h1>Carregando...</h1>;
+  const handleSubmit = useCallback(async (e) => {
+    e.preventDefault();
+    try {
+      await fetch(`${url}/posts/${subtopicId}`, {
+        method: 'POST',
+        mode: 'cors',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          title,
+          message,
+        }),
+      })
+        .then((res) => {
+          return res.json();
+        })
+        .then((data) => {
+          console.log(data);
+          if (data.status === 200) {
+            setTitle('');
+            setMessage('');
+            setResponseMessage('User created successfully');
+            console.log('CRIADO COM SUCESSO');
+          } else {
+            setResponseMessage('Some error occured');
+            console.log('CRIADO COM ERRO');
+          }
+        });
+    } catch (err) {
+      console.log(err);
+    }
+  });
 
+  useEffect(() => {
+    fetchPosts();
+    const interval = setInterval(() => console.log('sneed'), 30_000);
+    return () => clearInterval(interval);
+  }, []);
+
+  async function fetchPosts() {
+    await fetch(`${url}/posts/subtopic/${subtopicId}`)
+      .then((res) => res.json())
+      .then(
+        (data) => {
+          setLoading(false);
+          setPosts(data);
+        },
+        (err) => {
+          setLoading(true);
+          setError(err);
+        }
+      );
+  }
   return (
     <Container>
       <TopNav />
       <Sidebar />
       <MainContent>
-        <CreatePostForm>
+        <CreatePostForm onSubmit={handleSubmit}>
           <label htmlFor='postTitle'>Título</label>
-          <TitleInput type='text' id='postTitle'></TitleInput>
+          <TitleInput
+            type='text'
+            id='postTitle'
+            value={title}
+            onChange={useCallback((e) => setTitle(e.target.value), [setTitle])}
+          ></TitleInput>
           <label htmlFor='postMessage'>Mensagem</label>
-          <TextArea id='postMessage'></TextArea>
+
+          <TextArea
+            id='postMessage'
+            value={message}
+            onChange={useCallback(
+              (e) => setMessage(e.target.value),
+              [setMessage]
+            )}
+          ></TextArea>
+
           <FileInput type='file' multiple></FileInput>
+
           <FormFooter>
-            <Submit>Postar</Submit>
+            <Submit type='submit'>Postar</Submit>
           </FormFooter>
         </CreatePostForm>
-        {data.map((post, index) => (
-          <Post
-            key={index}
-            title={post.title}
-            message={post.message}
-            files={post.files}
-          />
-        ))}
+        {!loading &&
+          posts.map((post) => (
+            <Post
+              key={post.post_id}
+              title={post.title}
+              message={post.message}
+              files={post.files}
+            />
+          ))}
       </MainContent>
     </Container>
   );
 };
+
 const Post = (props) => {
   return (
     <PostCard>
       <h2>{props.title}</h2>
       <SlideshowContainer>
-        {/* {props.files.map((image, index) => ( */}
-          <div className='mySlide'>
-            <Img src={mock}></Img>
-            <ControlButton
-              className='prev'
-              onClick={() => plusSlides(-1)}
-            ></ControlButton>
-            <ControlButton
-              className='next'
-              onClick={() => plusSlides(1)}
-            ></ControlButton>
-            <div style='text-align: center'>
-              <Dot className='dot' onClick={()=>currentSlide(1)}></Dot>
-              <Dot className='dot' onClick={()=>currentSlide(2)}></Dot>
-            </div>
-          </div>
-        {/* ))} */}
+        {props.files.map((image, index) => (
+          <Img src={mock} key={index}></Img>
+        ))}
       </SlideshowContainer>
       <p>{props.message}</p>
     </PostCard>
   );
 };
+
 const ControlButton = styled('div', {
   cursor: 'pointer',
   position: 'absolute',
@@ -143,37 +198,5 @@ const Sidebar = () => {
     </SidebarBody>
   );
 };
-
-let slideIndex = 1;
-showSlides(slideIndex);
-
-function plusSlides(n) {
-  showSlides((slideIndex += n));
-}
-
-function currentSlide(n) {
-  showSlides((slideIndex = n));
-}
-
-function showSlides(n) {
-  let i;
-  let slides = document.getElementsByClassName('mySlides');
-  let dots = document.getElementsByClassName('dot');
-  if (n > slides.length) {
-    slideIndex = 1;
-  }
-  if (n < 1) {
-    slideIndex = slides.length;
-  }
-  for (i = 0; i < slides.length; i++) {
-    slides[i].style.display = 'none';
-  }
-  for (i = 0; i < dots.length; i++) {
-    dots[i].className = dots[i].className.replace(' active', '');
-  }
-  slides[slideIndex - 1].style.display = 'block';
-  dots[slideIndex - 1].className += ' active';
-}
 export default Posts;
-
 
