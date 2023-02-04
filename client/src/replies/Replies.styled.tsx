@@ -4,7 +4,6 @@ const { styled } = stiches;
 export const RepliesContainer = styled('div', {
   position: 'relative',
   width: '80%',
-  height: '90vh',
   margin: '12px auto',
   padding: '12px',
   borderRadius: '12px',
@@ -17,6 +16,17 @@ export const PostContainer = styled('div', {
   position: 'relative',
   width: '80%',
   height: '30vh',
+  margin: '12px auto',
+  padding: '12px',
+  borderRadius: '12px',
+  fontSize: '14px',
+  boxShadow: '2px 2px 6px 0 rgba(0, 0, 0, 0.3)',
+  backgroundColor: '$primary',
+});
+export const AddCommentContainer = styled('div', {
+  position: 'relative',
+  width: '80%',
+  height: '20vh',
   margin: '12px auto',
   padding: '12px',
   borderRadius: '12px',

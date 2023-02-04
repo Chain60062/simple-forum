@@ -11,12 +11,13 @@ const stitches = createStitches({
   },
   theme: {
     colors: {
-      primary: '#e32d79',
-      primaryShade: '#cc286c',
-      primaryBright: '#e85793',
-      secondary: '#680ff7',
-      secondaryShade: '#5d0dde',
-      background: '#e4dff2',
+      secondary: '#59e3b7',
+      secondaryShade: '#D8D8E5',
+      secondaryBright: '#782bf3',
+      primary: '#59e3b7',
+      primaryShade: '#0F0A35',
+      primaryBright: '#c1b8df',
+      background: '#ffffff',
     },
     space: {
       xs: '0.563rem',
@@ -50,8 +51,8 @@ const injectGlobalStyles = stitches.globalCss({
   body: {
     margin: 0,
     padding: 0,
-    fontFamily: `'Comfortaa', cursive`,
-    backgroundColor: '#fff7fc',
+    fontFamily: `'Work Sans', sans-serif;`,
+    backgroundColor: '$background',
   },
   'html, body': {
     height: '100%',
@@ -62,8 +63,4 @@ const injectGlobalStyles = stitches.globalCss({
 injectGlobalStyles();
 
 export default stitches;
-
-
-
-
 

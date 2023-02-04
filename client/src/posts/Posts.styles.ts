@@ -34,6 +34,9 @@ export const PostCard = styled('section', {
   borderRadius: '12px',
   boxShadow: '2px 2px 6px 0 rgba(0, 0, 0, 0.3)',
 });
+export const PostFooter = styled('div', {
+  float: 'right',
+});
 export const Container = styled('div', {
   height: '100vh',
   width: '100vw',
@@ -71,3 +74,4 @@ export const AddPostContainer = styled('div', {
   margin: '12px auto',
   borderRadius: '12px',
 });
+

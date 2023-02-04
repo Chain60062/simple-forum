@@ -20,10 +20,10 @@ export const signIn = async (
 
         req.session.user = user.rows[0];
 
-        res.status(200).json(user.rows[0]);
-      } else {
-        res.status(401).json('Credenciais fornecidas estão incorreta');
+        return res.status(200).json(user.rows[0]);
       }
+      console.log('INCORRETA')
+      res.status(401).json('Credenciais fornecidas estão incorreta');
     })
     .catch((err) => {
       next(err);

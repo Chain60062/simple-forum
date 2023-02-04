@@ -36,7 +36,7 @@ const App = () => {
       <QueryClientProvider client={queryClient}>
         <UserContext.Provider value={{loggedUser, setLoggedUser}}>
           <RouterProvider router={router} fallbackElement={<Loading />} />
-          {/* <ReactQueryDevtoolsPanel /> */}
+          <ReactQueryDevtoolsPanel />
         </UserContext.Provider>
       </QueryClientProvider>
     </React.StrictMode>

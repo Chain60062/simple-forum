@@ -9,5 +9,4 @@ export interface IReply {
 }
 export type ReplyForm = {
   message: string;
-  parent_id?: string | null;
 }

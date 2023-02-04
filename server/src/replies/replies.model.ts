@@ -12,22 +12,24 @@ export const addReply = async (
     const parentId = req.params.parentId;
     const userId = req.session.user?.profile_id;
     const { message } = req.body;
-    const files = req.files as Express.Multer.File[];
-    const fileQuery = 'INSERT INTO file(reply_id, file_path) VALUES($1, $2)';
+    // const files = req.files as Express.Multer.File[];
+    // const fileQuery = 'INSERT INTO file(reply_id, file_path) VALUES($1, $2)';
     const replyQuery =
-      'INSERT INTO reply(profile_id, post_id, parent_id, message) VALUES($1, $2, $3, $4) RETURNING *';
+      `WITH inserted AS (INSERT INTO reply(profile_id, post_id, parent_id, message) VALUES($1, $2, $3, $4) RETURNING *) SELECT * FROM 
+      inserted AS i JOIN profile AS p ON i.profile_id = p.profile_id`;
 
     const reply = await pool.query(replyQuery, [userId, postId, parentId, message]);
 
-    Promise.all(
-      files.map((file: Express.Multer.File) => {
-        pool.query(fileQuery, [reply.rows[0].reply_id, file.path]);
-      }),
-    )
-      .then(() => {
-        res.status(200).json({ message: reply.rows[0].message });
-      })
-      .catch((err) => next(err));
+    res.status(200).json(reply.rows[0]);
+    // Promise.all(
+    //   files.map((file: Express.Multer.File) => {
+    //     pool.query(fileQuery, [reply.rows[0].reply_id, file.path]);
+    //   }),
+    // )
+    //   .then(() => {
+    //     res.status(200).json({ message: reply.rows[0].message });
+    //   })
+    //   .catch((err) => next(err));
   } catch (err) {
     next(err);
   }
@@ -92,9 +94,9 @@ export const getPostReplies = async (
   try {
     const postId = req.params.postId;
     const replies = await pool.query(
-      `with recursive replies as (select r.reply_id, r.message, r.parent_id, r.post_id, p.nickname, p.profile_name, p.avatar from reply r join profile p on p.profile_id = r.profile_id 
-      where r.post_id = $1 union select child.reply_id, child.message, child.parent_id, child.post_id, p.nickname, p.profile_name, p.avatar from reply child
-      join replies on child.parent_id = replies.reply_id join profile p on p.profile_id = child.profile_id) select * from replies r`,
+      `with recursive replies as (select r.reply_id, r.message, r.parent_id, r.post_id, r.created_at, p.nickname, p.profile_name, p.avatar from reply r join profile p on p.profile_id = r.profile_id 
+      where r.post_id = $1 union select child.reply_id, child.message, child.parent_id, child.post_id, child.created_at, p.nickname, p.profile_name, p.avatar from reply child
+      join replies on child.parent_id = replies.reply_id join profile p on p.profile_id = child.profile_id) select * from replies r order by r.created_at desc`,
       [postId],
     );
     res.status(200).json(replies.rows);

@@ -28,7 +28,7 @@ export const isLoggedIn = async () => {
   return res.json();
 };
 export const addUser = async (data: UserForm) => {
-  const res = await fetch(`${url}/user`, {
+  const res = await fetch(`${url}/users`, {
     method: 'POST',
     mode: 'cors',
     credentials: 'include',
@@ -46,7 +46,7 @@ export const getPosts = async (subtopicId: string) => {
 };
 
 export const getUser = async (username: string) => {
-  const res = await fetch(`${url}/user/${username}`);
+  const res = await fetch(`${url}/users/${username}`);
   return res.json();
 };
 

@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
+import { body } from 'express-validator';
 import pool from '../config/db/db.js';
 
 export const addSubtopic = async (
@@ -8,6 +9,7 @@ export const addSubtopic = async (
 ) => {
   try {
     const topicId = req.params.topicId;
+    // body('subtopic_name').isString();
     const { subtopic_name, description } = req.body;
     const sqlQuery =
       'INSERT INTO subtopic(subtopic_name, topic_id, description) VALUES($1, $2, $3) RETURNING subtopic_name, subtopic_id, description';

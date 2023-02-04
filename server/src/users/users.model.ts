@@ -2,6 +2,7 @@ import pool from '../config/db/db.js';
 import * as argon2 from 'argon2';
 import { unlink } from 'node:fs';
 import { Request, Response, NextFunction } from 'express';
+import { validationResult } from 'express-validator';
 export const createUser = async (
   req: Request<
     object,
@@ -12,12 +13,15 @@ export const createUser = async (
   next: NextFunction,
 ) => {
   try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
     const { profile_name, password, nickname, email } = req.body;
     const avatar = req.file;
     const sqlQuery =
       'INSERT INTO profile(cipher, avatar, profile_name, profile_role, is_verified, nickname, email) VALUES($1, $2, $3, $4, $5, $6, $7)';
 
-    // hashing
     const hash = await argon2.hash(password, {
       parallelism: 2,
     });
@@ -80,7 +84,7 @@ export const deleteUser = async (req: Request, res: Response, next: NextFunction
     }
     await pool.query('DELETE FROM profile WHERE profile_id = $1', [userId]);
 
-    res.status(200).json('Sua conta foi apagada com sucesso');
+    res.status(200).json('Sua conta foi removida com sucesso');
   } catch (err) {
     next(err);
   }
@@ -96,4 +100,12 @@ export const getUserByUsername = async (req: Request, res: Response, next: NextF
   }
 };
 
+export const getUserByEmail = async (email: string) => {
+  try {
+    const user = await pool.query('SELECT * FROM profile WHERE email = $1', [email]);
+    return user.rows[0];
+  } catch (err) {
+    return err;
+  }
+};
 

@@ -6,6 +6,7 @@ import {
   ReplyAvatar,
   Dropdown,
   DropdownContent,
+  AddCommentContainer,
 } from './Replies.styled';
 import { AddForm, FormFooter, Submit, TextInput } from '../styled/Forms';
 import { HiOutlineDotsVertical } from 'react-icons/hi';
@@ -18,7 +19,7 @@ const url = import.meta.env.VITE_APP_SERVER_URL || 'http://localhost:8085';
 
 export default function Replies() {
   const addReply = async (data: ReplyForm) => {
-    const res = await fetch(`${url}/subtopics/${postId}/${parentId}`, {
+    const res = await fetch(`${url}/replies/${postId}`, {
       method: 'POST',
       mode: 'cors',
       credentials: 'include',
@@ -46,10 +47,10 @@ export default function Replies() {
   });
 
   const { mutateAsync } = useMutation(addReply, {
-    onSuccess: async (newSubtopic) => {
+    onSuccess: async (newReply) => {
       queryClient.setQueryData<Array<IReply> | undefined>(
-        ['subtopics'],
-        (old) => [newSubtopic, ...(old as Array<IReply>)]
+        ['replies'],
+        (old) => [newReply, ...(old as Array<IReply>)]
       );
     },
     onError: (err) => {
@@ -75,41 +76,46 @@ export default function Replies() {
       {replies.isLoading ? (
         <span>Loading replies...</span>
       ) : (
-        <RepliesContainer>
-          <AddForm onSubmit={handleSubmit(onSubmit)}>
-            <label htmlFor='name'>Comentário</label>
-            <TextInput
-              type='text'
-              id='title'
-              {...register('message', {
-                required: true,
-                maxLength: 64,
-              })}
-              aria-invalid={errors.message ? 'true' : 'false'}
-            />
-            {errors.message?.type === 'required' && (
-              <p role='alert'>Mensagem é obrigatória</p>
-            )}
-            <FormFooter>
-              <Submit type='submit'>Comentar</Submit>
-            </FormFooter>
-          </AddForm>
+        <>
+          <AddCommentContainer>
+            <AddForm onSubmit={handleSubmit(onSubmit)}>
+              <label htmlFor='name'>Comentário</label>
+              <TextInput
+                type='text'
+                id='title'
+                {...register('message', {
+                  required: true,
+                  maxLength: 64,
+                })}
+                aria-invalid={errors.message ? 'true' : 'false'}
+              />
+              {errors.message?.type === 'required' && (
+                <p role='alert'>Mensagem é obrigatória</p>
+              )}
+              <FormFooter>
+                <Submit type='submit'>Comentar</Submit>
+              </FormFooter>
+            </AddForm>
+          </AddCommentContainer>
 
-          {replies.data.map((reply: IReply) => (
-            <ReplyContainer key={reply.reply_id}>
-              <ReplyAvatar src={`${url}/${reply.avatar}`} alt='avatar' />
-              <p>
-                {reply.nickname} Comentou: {reply.message}
-              </p>
-              <Dropdown>
-                <HiOutlineDotsVertical />
-                <DropdownContent className='dropdown-content'>
-                  <a onClick={() => setParentId(reply.reply_id)}>Reply</a>
-                </DropdownContent>
-              </Dropdown>
-            </ReplyContainer>
-          ))}
-        </RepliesContainer>
+          <RepliesContainer>
+            {replies.data.map((reply: IReply) => (
+              <ReplyContainer key={reply.reply_id}>
+              {reply.reply_id}
+                <ReplyAvatar src={`${url}/${reply.avatar}`} alt='avatar' />
+                <p>
+                  {reply.nickname} Comentou: {reply.message}
+                </p>
+                <Dropdown>
+                  <HiOutlineDotsVertical />
+                  <DropdownContent className='dropdown-content'>
+                    <a onClick={() => setParentId(reply.reply_id)}>Reply</a>
+                  </DropdownContent>
+                </Dropdown>
+              </ReplyContainer>
+            ))}
+          </RepliesContainer>
+        </>
       )}
     </>
   );

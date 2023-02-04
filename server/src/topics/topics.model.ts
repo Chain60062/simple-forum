@@ -1,6 +1,5 @@
 import pool from '../config/db/db.js';
 import { Request, Response, NextFunction } from 'express';
-
 export const addTopic = async (
   req: Request<object, object, { topic_name: string; description: string }>,
   res: Response,

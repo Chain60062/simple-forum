@@ -17,7 +17,7 @@ import { addUser } from '../util/api';
 import { IUser, UserForm } from './Signup.types';
 const SignupPage = () => {
   const { handleSubmit, register, reset } = useForm<UserForm>();
-  const [appAlert, setAppAlert] = useState(false);
+  
   const { mutateAsync } = useMutation(addUser, {
     onSuccess: (data) => {
       reset();

@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { HiOutlinePencilAlt, HiTrash } from 'react-icons/hi';
 import { useForm } from 'react-hook-form';
 import { UserContext } from '../context/UserContext';
 import TopNav from '../common/TopNav.jsx';
@@ -18,6 +19,7 @@ import {
   FileInput,
   TextArea,
   AddPostContainer,
+  PostFooter,
 } from './Posts.styles';
 import { AddForm, TextInput, FormFooter, Submit } from '../styled/Forms';
 import { getPosts } from '../util/api';
@@ -137,6 +139,10 @@ const Post = (props: PostProps) => {
         </SlideshowContainer>
         <p>{props.message}</p>
       </StyledLink>
+      <PostFooter>
+        <HiOutlinePencilAlt size={2}/>
+        <HiTrash size={2}/>
+      </PostFooter>
     </PostCard>
   );
 };
@@ -193,4 +199,5 @@ const Sidebar = () => {
   );
 };
 export default Posts;
+
 

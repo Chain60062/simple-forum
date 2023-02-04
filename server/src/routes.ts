@@ -7,7 +7,7 @@ import subtopicRouter from './subtopics/subtopics.routes.js';
 import replyRouter from './replies/replies.routes.js';
 
 const router = Router();
-router.use('/user', userRouter);
+router.use('/users', userRouter);
 router.use('/auth', authRouter);
 router.use('/posts', postRouter);
 router.use('/topics', topicRouter);
