@@ -11,30 +11,37 @@ import {
   InputIcon,
   Input,
   SubmitButton,
-} from '../styled/Forms';
+} from '../styles/Forms';
 import { login } from '../util/api';
 import { LoginForm } from './Login.types';
+import { Navigate } from 'react-router-dom';
 
 const LoginPage = () => {
   const { setLoggedUser } = useContext(UserContext);
-
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<LoginForm>();
 
-  const { mutateAsync } = useMutation(login, {
+  const { mutateAsync, isSuccess } = useMutation(login, {
     onSuccess: (data) => {
+      reset();
       setLoggedUser(data);
     },
-    onError: (err) => {
-      alert(`there was an error ${err}`);
+    onError: (err: Error) => {
+      alert(`Houve um erro: ${err.message}`);
     },
   });
 
   const onSubmit: SubmitHandler<LoginForm> = async (data) =>
     await mutateAsync(data);
+
+  //Redirect after successful login attempt
+  if (isSuccess) {
+    return <Navigate to='/' />;
+  }
 
   return (
     <Container>
@@ -69,4 +76,3 @@ const LoginPage = () => {
 };
 
 export default LoginPage;
-

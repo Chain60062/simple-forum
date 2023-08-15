@@ -1,45 +1,32 @@
 import React, { useState, useContext } from 'react';
 import { HiMenu } from 'react-icons/hi';
-import { TopNavBody, TopNavIcon, NavLink } from '../styled/TopNav';
+import { TopNavBody, TopNavIcon, NavLink } from '../styles/TopNav';
 import { UserContext } from '../context/UserContext';
 
 const TopNav = () => {
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  // const [isCollapsed, setIsCollapsed] = useState(false);
   const { loggedUser } = useContext(UserContext);
   return (
     <TopNavBody>
-      <NavLink collapsed={isCollapsed} to='/'>
-        Home
-      </NavLink>
+      <NavLink to='/'>Home</NavLink>
 
       {loggedUser ? (
-        <NavLink collapsed={isCollapsed} css={{ float: 'right' }} to={`/${loggedUser.nickname}`} >
+        <NavLink style={{ float: 'right' }} to={`/${loggedUser.nickname}`}>
           {loggedUser.profile_name}
         </NavLink>
       ) : (
         <>
-          <NavLink
-            collapsed={isCollapsed}
-            css={{ float: 'right' }}
-            to='/cadastro'
-          >
+          <NavLink style={{ float: 'right' }} to='/cadastro'>
             Cadastrar
           </NavLink>
 
-          <NavLink collapsed={isCollapsed} css={{ float: 'right' }} to='/login'>
+          <NavLink style={{ float: 'right' }} to='/login'>
             Login
           </NavLink>
         </>
       )}
 
-      <TopNavIcon
-        as={HiMenu}
-        size={28}
-        collapsed={isCollapsed}
-        onClick={() => {
-          setIsCollapsed(!isCollapsed);
-        }}
-      ></TopNavIcon>
+      <TopNavIcon as={HiMenu} size={28}></TopNavIcon>
     </TopNavBody>
   );
 };

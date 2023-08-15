@@ -11,10 +11,11 @@ import {
   StyledGridForm,
   Alert,
   AlertText,
-} from '../styled/Forms';
+} from '../styles/Forms';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { addUser } from '../util/api';
 import { IUser, UserForm } from './Signup.types';
+
 const SignupPage = () => {
   const { handleSubmit, register, reset } = useForm<UserForm>();
   
@@ -90,15 +91,14 @@ const SignupPage = () => {
           </div>
         </StyledGridForm>
       </Container>
-      <Alert>
+      {/* <Alert>
         <AlertText>
           Alerta de polaco,Alerta de polaco,Alerta de polaco,Alerta de polaco
           Alerta de polaco,Alerta de polaco,Alerta de polaco,Alerta de polaco
         </AlertText>
-      </Alert>
+      </Alert> */}
     </>
   );
 };
 
 export default SignupPage;
-

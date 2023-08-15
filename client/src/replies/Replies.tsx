@@ -7,46 +7,39 @@ import {
   Dropdown,
   DropdownContent,
   AddCommentContainer,
-} from './Replies.styled';
-import { AddForm, FormFooter, Submit, TextInput } from '../styled/Forms';
+} from './Replies.styles';
 import { HiOutlineDotsVertical } from 'react-icons/hi';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { getPostById, getPostReplies } from '../util/api';
 import { IReply, ReplyForm } from './Replies.types';
-const url = import.meta.env.VITE_APP_SERVER_URL || 'http://localhost:8085';
+import { SERVER_URL } from '../util/config';
+import { addReply } from '../util/api';
 
 export default function Replies() {
-  const addReply = async (data: ReplyForm) => {
-    const res = await fetch(`${url}/replies/${postId}`, {
-      method: 'POST',
-      mode: 'cors',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
-    return res.json();
-  };
-  const queryClient = useQueryClient();
-  const { postId } = useParams();
   const [parentId, setParentId] = useState<string | null>(null);
+  const { postId } = useParams();
+  const queryClient = useQueryClient();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<ReplyForm>();
 
-  const post = useQuery(['post'], () => getPostById(postId!), {
+  const post = useQuery(['post'], async () => getPostById(postId as string), {
     refetchOnWindowFocus: false,
   });
-  const replies = useQuery(['replies'], () => getPostReplies(postId!), {
-    refetchOnWindowFocus: false,
-  });
+  
+  const replies = useQuery(
+    ['replies'],
+    async () => getPostReplies(postId as string),
+    {
+      refetchOnWindowFocus: false,
+    }
+  );
 
-  const { mutateAsync } = useMutation(addReply, {
+  const { mutate } = useMutation(addReply, {
     onSuccess: async (newReply) => {
       queryClient.setQueryData<Array<IReply> | undefined>(
         ['replies'],
@@ -57,12 +50,13 @@ export default function Replies() {
       alert(`there was an error ${err}`);
     },
   });
-  const onSubmit: SubmitHandler<ReplyForm> = async (data) =>
-    await mutateAsync(data);
+  // handle submit
+  const onSubmit: SubmitHandler<ReplyForm> = async (data) => mutate({data, postId});
 
   if (post.error instanceof Error && post.isError) {
     return <span>Error: {post.error.message}</span>;
   }
+
   return (
     <>
       {post.isLoading ? (
@@ -78,7 +72,7 @@ export default function Replies() {
       ) : (
         <>
           <AddCommentContainer>
-            <AddForm onSubmit={handleSubmit(onSubmit)}>
+            {/* <AddForm onSubmit={handleSubmit(onSubmit)}>
               <label htmlFor='name'>Comentário</label>
               <TextInput
                 type='text'
@@ -91,18 +85,21 @@ export default function Replies() {
               />
               {errors.message?.type === 'required' && (
                 <p role='alert'>Mensagem é obrigatória</p>
-              )}
-              <FormFooter>
+              )} 
+               <FormFooter>
                 <Submit type='submit'>Comentar</Submit>
               </FormFooter>
-            </AddForm>
+            </AddForm> */}
           </AddCommentContainer>
 
           <RepliesContainer>
             {replies.data.map((reply: IReply) => (
               <ReplyContainer key={reply.reply_id}>
-              {reply.reply_id}
-                <ReplyAvatar src={`${url}/${reply.avatar}`} alt='avatar' />
+                {reply.reply_id}
+                <ReplyAvatar
+                  src={`${SERVER_URL}/${reply.avatar}`}
+                  alt='avatar'
+                />
                 <p>
                   {reply.nickname} Comentou: {reply.message}
                 </p>

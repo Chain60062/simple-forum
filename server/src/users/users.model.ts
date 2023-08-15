@@ -3,6 +3,7 @@ import * as argon2 from 'argon2';
 import { unlink } from 'node:fs';
 import { Request, Response, NextFunction } from 'express';
 import { validationResult } from 'express-validator';
+
 export const createUser = async (
   req: Request<
     object,
@@ -42,7 +43,7 @@ export const createUser = async (
 
 export const editUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const userId = req.session.user?.user_id;
+    const userId = req.session.user?.profile_id;
     const oldAvatar = await pool.query('SELECT avatar FROM profile WHERE profile_id = $1', [
       userId,
     ]);
@@ -71,7 +72,7 @@ export const editUser = async (req: Request, res: Response, next: NextFunction) 
 
 export const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const userId = req.session.user?.user_id;
+    const userId = req.session.user?.profile_id;
     const avatar = await pool.query('SELECT avatar FROM profile WHERE profile_id = $1', [userId]);
 
     if (typeof avatar == 'undefined' || avatar.rowCount === 0)

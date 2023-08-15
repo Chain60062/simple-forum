@@ -1,14 +1,15 @@
 import React, { useContext } from 'react';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import List, { Card } from '../common/List.js';
 import { useParams } from 'react-router-dom';
-import { ISubtopic, SubtopicForm } from './Subtopics.types';
-import { getSubtopics } from '../util/api';
-import { UserContext } from '../context/UserContext.js';
-import { AdminContainer } from './Subtopics.styled';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { AddForm, TextInput, FormFooter, Submit } from '../styled/Forms';
-const url = import.meta.env.VITE_APP_SERVER_URL || 'http://localhost:8085';
+import { UserContext } from '../context/UserContext';
+import { SERVER_URL } from '../util/config';
+import List, { ItemCard as Card } from '../common/Lists'; //ItemsList as List, ItemCard
+import { getSubtopics } from '../util/api';
+import { AdminContainer } from './Subtopics.styles';
+import { AddForm, TextInput, FormFooter, Submit } from '../styles/Forms';
+import { CenteredContainer } from '../styles/Lists';
+import { ISubtopic, SubtopicForm } from './Subtopics.types';
 
 const Subtopics = () => {
   const { topicId } = useParams();
@@ -23,7 +24,7 @@ const Subtopics = () => {
   } = useForm<SubtopicForm>();
   const queryClient = useQueryClient();
   const addSubtopic = async (data: SubtopicForm) => {
-    const res = await fetch(`${url}/subtopics/${topicId}`, {
+    const res = await fetch(`${SERVER_URL}/subtopics/${topicId}`, {
       method: 'POST',
       mode: 'cors',
       credentials: 'include',
@@ -59,7 +60,7 @@ const Subtopics = () => {
   }
   return (
     <>
-      {loggedUser?.profile_role == 'user' && (
+      {loggedUser?.profile_role == 'admin' && (
         <AdminContainer>
           <AddForm onSubmit={handleSubmit(onSubmit)}>
             <label htmlFor='name'>Título</label>
@@ -90,19 +91,20 @@ const Subtopics = () => {
           </AddForm>
         </AdminContainer>
       )}
-      <List title='Subtópicos'>
-        {data.map((subtopic: ISubtopic) => (
-          <Card
-            key={subtopic.subtopic_id}
-            title={subtopic.subtopic_name}
-            description={subtopic.description}
-            link={`${subtopic.subtopic_id}/posts`}
-          />
-        ))}
-      </List>
+      <CenteredContainer>
+        <List title='Subtópicos'>
+          {data.map((subtopic: ISubtopic) => (
+            <Card
+              key={subtopic.subtopic_id}
+              title={subtopic.subtopic_name}
+              description={subtopic.description}
+              link={`${subtopic.subtopic_id}/posts`}
+            />
+          ))}
+        </List>
+      </CenteredContainer>
     </>
   );
 };
 
 export default Subtopics;
-

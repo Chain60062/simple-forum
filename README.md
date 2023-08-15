@@ -18,7 +18,7 @@ The client is made using react and some other libraries like vite, stitches, rea
 <npm / yarn / pnpm> run <dev/ build / preview>
 ```
 ## Database
-In the server/config/db folder there is a sql file, run it however you like(CLI, Dbeaver, azure data studio...)e, just make sure you got a more recent Postgresql version
+In the server/config/db folder there is a sql file, just run the script and make sure you got a more recent Postgresql
 
 ## Server
 The server uses express and should also be installed with one of the install commands shown before. There are also two scripts in the project , dev and build.

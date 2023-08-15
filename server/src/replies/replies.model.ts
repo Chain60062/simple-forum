@@ -42,7 +42,7 @@ export const deleteReply = async (
 ) => {
   try {
     const replyId = req.params.replyId;
-    const userId = req.session.user?.user_id;
+    const userId = req.session.user?.profile_id;
     const files = await pool.query('SELECT file_path FROM file WHERE reply_id = $1', [replyId]);
 
     if (typeof files == 'undefined' || files.rowCount === 0)
@@ -70,7 +70,7 @@ export const editReply = async (
   try {
     const { message, subtopic } = req.body;
     const replyId = req.params.replyId;
-    const userId = req.session.user?.user_id;
+    const userId = req.session.user?.profile_id;
     const subtopicId = await pool.query(
       'SELECT subtopic_id FROM subtopic WHERE subtopic_name = $1',
       [subtopic],

@@ -1,16 +1,17 @@
 import React, { useContext } from 'react';
+import List, { ItemCard as Card } from '../common/Lists'; //ItemsList as List, ItemCard
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import List, { Card } from '../common/List.js';
-import { ITopic } from './Topics.types';
-import { getTopics } from '../util/api';
-import { UserContext } from '../context/UserContext.js';
-import { AdminContainer } from './Topics.styled';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { AddForm, TextInput, FormFooter, Submit } from '../styled/Forms';
-const url = import.meta.env.VITE_APP_SERVER_URL || 'http://localhost:8085';
+import { UserContext } from '../context/UserContext';
+import { getTopics, addTopic } from '../util/api';
+import { ITopic } from './Topics.types';
+import { CenteredContainer } from '../styles/Lists';
+import { AdminContainer } from './Topics.styles';
+import { AddForm, TextInput, FormFooter, Submit } from '../styles/Forms';
 
 const Topics = () => {
   const { loggedUser } = useContext(UserContext);
+  const queryClient = useQueryClient();
   const { data, error, isError, isLoading } = useQuery({
     queryKey: ['topics'],
     queryFn: getTopics,
@@ -20,21 +21,8 @@ const Topics = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<ITopic>();
-  const queryClient = useQueryClient();
-  const addSubtopic = async (data: ITopic) => {
-    const res = await fetch(`${url}/topics`, {
-      method: 'POST',
-      mode: 'cors',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
-    return res.json();
-  };
 
-  const { mutateAsync } = useMutation(addSubtopic, {
+  const { mutateAsync } = useMutation(addTopic, {
     onSuccess: async (newTopic) => {
       queryClient.setQueryData<Array<ITopic> | undefined>(['topics'], (old) => [
         newTopic,
@@ -42,7 +30,7 @@ const Topics = () => {
       ]);
     },
     onError: (err) => {
-      alert(`there was an error ${err}`);
+      alert(`Houve um erro: ${err}`);
     },
   });
 
@@ -58,7 +46,7 @@ const Topics = () => {
   }
   return (
     <>
-      {loggedUser?.profile_role == 'user' && (
+      {loggedUser?.profile_role == 'admin' && (
         <AdminContainer>
           <AddForm onSubmit={handleSubmit(onSubmit)}>
             <label htmlFor='name'>Nome do Tópico</label>
@@ -89,16 +77,19 @@ const Topics = () => {
           </AddForm>
         </AdminContainer>
       )}
-      <List title='Tópicos'>
-        {data.map((topic: ITopic) => (
-          <Card
-            key={topic.topic_id}
-            title={topic.topic_name}
-            description={topic.description}
-            link={`${topic.topic_id}/subtopics`}
-          />
-        ))}
-      </List>
+      {/* Topics List */}
+      <CenteredContainer>
+        <List title='Tópicos'>
+          {data.map((topic: ITopic) => (
+            <Card
+              key={topic.topic_id}
+              title={topic.topic_name}
+              description={topic.description}
+              link={`${topic.topic_id}/subtopics`}
+            />
+          ))}
+        </List>
+      </CenteredContainer>
     </>
   );
 };

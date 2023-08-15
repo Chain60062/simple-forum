@@ -2,6 +2,7 @@ import { NextFunction, Response, Request } from 'express';
 import pool from '../config/db/db.js';
 import { ICreatePost } from './posts.types';
 import { unlink } from 'fs';
+import path from 'path';
 
 export const addReply = async (
   req: Request<{ subtopicId: string }, object, ICreatePost>,
@@ -36,10 +37,11 @@ async function createPost(
     if (typeof files != 'undefined') {
       Promise.all(
         files.map((file: Express.Multer.File) => {
-          pool.query(fileQuery, [post.rows[0].post_id, null, file.path]);
+          pool.query(fileQuery, [post.rows[0].post_id, null, path.join('uploads', file.filename)]);
         }),
       ).catch(next);
     }
+
     res.status(200).json(post.rows[0]);
   } catch (err) {
     next(err);
@@ -53,7 +55,7 @@ export const deletePost = async (
 ) => {
   try {
     const postId = req.params.postId;
-    const userId = req.session.user?.user_id;
+    const userId = req.session.user?.profile_id;
     const files = await pool.query('SELECT file_path FROM file WHERE post_id = $1', [postId]);
 
     if (typeof files == 'undefined' || files.rowCount === 0)
@@ -81,7 +83,7 @@ export const editPost = async (
   try {
     const { message, subtopic } = req.body;
     const postId = req.params.postId;
-    const userId = req.session.user?.user_id;
+    const userId = req.session.user?.profile_id;
     const subtopicId = await pool.query(
       'SELECT subtopic_id FROM subtopic WHERE subtopic_name = $1',
       [subtopic],
@@ -139,7 +141,7 @@ export const listPostsByUser = async (
   next: NextFunction,
 ) => {
   try {
-    const userId = req.params.userId; //pega user_id e os posts associados
+    const userId = req.params.userId; //pega profile_id e os posts associados
     const posts = await pool.query(
       'SELECT p.post_id, profile_id, message, array_to_json(array_agg(file_path)), title, created_at as files, created_at FROM post p LEFT JOIN file f ON p.post_id = f.post_id WHERE p.profile_id = $1 GROUP BY p.post_id ORDER BY created_at DESC',
       [userId],

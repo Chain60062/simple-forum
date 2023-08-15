@@ -1,21 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { UserContext } from './context/UserContext';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import { ReactQueryDevtoolsPanel } from '@tanstack/react-query-devtools';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import Loading from './styled/Loading.js';
+import Loading from './styles/Loading';
+import { GlobalStyle } from './App.styles';
 import routes from './routes.jsx';
-// import { UserContextType, UserType } from './types/user';
+import { SERVER_URL } from './util/config';
+import './App.css';
+
 const queryClient = new QueryClient();
 const router = createBrowserRouter(routes);
-const url = import.meta.env.VITE_APP_SERVER_URL || 'http://localhost:8085';
 
 const App = () => {
   const [loggedUser, setLoggedUser] = useState<any>(null);
 
   useEffect(() => {
     function fetchLoggedInUser() {
-      fetch(`${url}/auth/login`, {
+      fetch(`${SERVER_URL}/auth/login`, {
         method: 'GET',
         mode: 'cors',
         credentials: 'include',
@@ -33,10 +34,10 @@ const App = () => {
 
   return (
     <React.StrictMode>
+      <GlobalStyle />
       <QueryClientProvider client={queryClient}>
-        <UserContext.Provider value={{loggedUser, setLoggedUser}}>
+        <UserContext.Provider value={{ loggedUser, setLoggedUser }}>
           <RouterProvider router={router} fallbackElement={<Loading />} />
-          <ReactQueryDevtoolsPanel />
         </UserContext.Provider>
       </QueryClientProvider>
     </React.StrictMode>

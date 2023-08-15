@@ -1,77 +1,87 @@
-import stitches from '../stitches';
-import { Link, Form } from 'react-router-dom';
-const { styled } = stitches;
+import { styled } from 'styled-components';
+import { Link } from 'react-router-dom';
 
-export const MainContent = styled('div', {
-  gridArea: 'posts',
-  overflowY: 'auto',
-});
-export const SidebarBody = styled('nav', {
-  overflowY: 'auto',
-  backgroundColor: '$primary',
-  marginTop: '0',
-  gridArea: 'sidebar',
-  '@breakpoint900': {
-    display: 'none',
-  },
-});
-export const SidebarList = styled('div', {});
-export const SidebarLink = styled(Link, {
-  backgroundColor: '$primaryShade',
-  display: 'block',
-  textAlign: 'center',
-  padding: '10px',
-  margin: '8px',
-  borderRadius: '12px',
-  '&:hover': {},
-});
-export const PostCard = styled('section', {
-  color: '$secondaryShade',
-  margin: '12px auto 12px auto',
-  width: '80%',
-  overflow: 'hidden',
-  padding: '12px',
-  borderRadius: '12px',
-  boxShadow: '2px 2px 6px 0 rgba(0, 0, 0, 0.3)',
-});
-export const PostFooter = styled('div', {
-  float: 'right',
-});
-export const Container = styled('div', {
-  height: '100vh',
-  width: '100vw',
-  display: 'grid',
-  gridTemplateRows: 'auto 1fr',
-  gridTemplateAreas: `
-  "topnav"
-  "posts"
-  `,
-  '@breakpointMin900': {
-    gridTemplateColumns: '0.6fr 1.4fr',
-    gridTemplateRows: 'auto 1fr',
-    gridTemplateAreas: `"topnav topnav" "sidebar posts"`,
-    gridAutoFlow: 'row',
-  },
-});
+export const MainContent = styled.div`
+  grid-area: posts;
+  overflow-y: auto;
+`;
 
-export const TextArea = styled('textarea', {
-  resize: 'none',
-  height: '100px',
-  width: '100%',
-  padding: '8px',
-  margin: '8px',
-  borderRadius: '12px',
-});
-export const FileInput = styled('input', {
-  display: 'block',
-  marginTop: '8px',
-});
+export const SidebarBody = styled.nav`
+  overflow-y: auto;
+  background-color: #223697;
+  margin-top: 0;
+  grid-area: sidebar;
 
-export const AddPostContainer = styled('div', {
-  position: 'relative',
-  boxShadow: '2px 2px 6px 0 rgba(0, 0, 0, 0.3)',
-  width: '80%',
-  margin: '12px auto',
-  borderRadius: '12px',
-});
+  @media (max-width: 900px) {
+    display: none;
+  }
+`;
+
+export const SidebarLink = styled(Link)`
+  background-color: white;
+  display: block;
+  text-align: center;
+  padding: 10px;
+  margin: 8px;
+  border-radius: 12px;
+`;
+
+export const PostCard = styled.section`
+  color: black;
+  background-color: white;
+  margin: 12px auto 12px auto;
+  width: 60%;
+  overflow: hidden;
+  padding: 12px;
+  border-radius: 12px;
+  box-shadow: 2px 2px 6px 0 rgba(0, 0, 0, 0.3);
+
+  @media (max-width: 900px) {
+    width: 90%;
+  }
+`;
+
+export const PostFooter = styled.div`
+  float: right;
+`;
+
+export const Container = styled.div`
+  height: 100vh;
+  width: 100vw;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  grid-template-areas:
+    'topnav'
+    'posts';
+
+  @media (min-width: 900px) {
+    grid-template-areas: 'topnav topnav' 'sidebar posts';
+    grid-template-columns: 0.2fr 1fr;
+    grid-template-rows: auto 1fr;
+    grid-auto-flow: row;
+  }
+`;
+
+export const TextArea = styled.textarea`
+  resize: none;
+  height: 100px;
+  width: 100%;
+  padding: 8px;
+  margin: 8px;
+  border-radius: 12px;
+`;
+
+export const FileInput = styled.input`
+  display: block;
+  margin-top: 8px;
+`;
+
+export const AddPostContainer = styled.div`
+  position: relative;
+  box-shadow: 2px 2px 6px 0 rgba(0, 0, 0, 0.3);
+  width: 60%;
+  margin: 12px auto;
+  border-radius: 12px;
+  background-color: #1d3869;
+`;
 
