@@ -1,4 +1,4 @@
-import pool from '../config/db/db.js';
+import pool from '../db/db.js';
 import { unlink } from 'fs';
 import { Request, Response, NextFunction } from 'express';
 

@@ -1,6 +1,6 @@
 import { NextFunction, Response, Request } from 'express';
-import pool from '../config/db/db.js';
-import { ICreatePost } from './posts.types';
+import pool from '../db/db.js';
+import { ICreatePost } from './posts.interfaces.js';
 import { unlink } from 'fs';
 import path from 'path';
 
@@ -23,28 +23,36 @@ async function createPost(
   res: Response,
   next: NextFunction,
 ) {
+  const client = await pool.connect();
   try {
-    const userId = req.session.user?.profile_id;
+    const userId = req.session.user?.user_id;
     const subtopicId = req.params.subtopicId;
     const { message, title } = req.body;
     const files = req.files as Express.Multer.File[];
-    const fileQuery = 'INSERT INTO file(post_id, reply_id, file_path) VALUES($1, $2, $3)';
+    const fileQuery = 'INSERT INTO file(post_id, reply_id, file_path, alt) VALUES($1, $2, $3, $4)';
+    // Transaction
+    await client.query('BEGIN');
     const postQuery =
-      'INSERT INTO post(profile_id, subtopic_id, title, message) VALUES($1, $2, $3, $4) RETURNING *';
+      'INSERT INTO post(user_id, subtopic_id, title, message) VALUES($1, $2, $3, $4) RETURNING *';
 
-    const post = await pool.query(postQuery, [userId, subtopicId, title, message]);
+    const post = await client.query(postQuery, [userId, subtopicId, title, message]);
 
     if (typeof files != 'undefined') {
       Promise.all(
         files.map((file: Express.Multer.File) => {
-          pool.query(fileQuery, [post.rows[0].post_id, null, path.join('uploads', file.filename)]);
+          const filePath = path.join('uploads', file.filename);
+          client.query(fileQuery, [post.rows[0].post_id, null, filePath, file.filename.slice(0, 16)]);
         }),
       ).catch(next);
     }
 
+    await client.query('COMMIT');
+
     res.status(200).json(post.rows[0]);
   } catch (err) {
     next(err);
+  }finally{
+    client.release();
   }
 }
 
@@ -55,20 +63,20 @@ export const deletePost = async (
 ) => {
   try {
     const postId = req.params.postId;
-    const userId = req.session.user?.profile_id;
+    const userId = req.session.user?.user_id;
     const files = await pool.query('SELECT file_path FROM file WHERE post_id = $1', [postId]);
 
     if (typeof files == 'undefined' || files.rowCount === 0)
       return res.status(404).json('Post não encontrado');
     await pool
-      .query('DELETE FROM post WHERE post_id = $1 AND profile_id = $2', [postId, userId])
+      .query('DELETE FROM post WHERE post_id = $1 AND user_id = $2', [postId, userId])
       .then(() => {
         for (const file of files.rows) {
           unlink(`${file.file_path}`, (err) => {
             if (err) next(err);
           });
         }
-        res.status(200).json('Post deletado com sucesso');
+        res.status(200).json('Post apagado com sucesso');
       })
       .catch(next);
   } catch (err) {
@@ -118,14 +126,14 @@ export const listPostsBySubtopic = async (
         p.created_at
       from
         post p
-      left join file f on
-        p.post_id = f.post_id
-      join profile u on p.profile_id = u.profile_id 
+      left join file f on p.post_id = f.post_id
+      join user_account u on p.user_id = u.user_id 
+      join profile pf on u.profile_id = pf.profile_id
       where
         subtopic_id = $1
       group by
         p.post_id,
-        u.profile_name
+        pf.profile_name
       order by
       created_at desc`,
       [subtopicId],

@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
-import { redirect } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import { HiOutlineUser, HiOutlineLockClosed, HiMail } from 'react-icons/hi';
 import {
   Container,
@@ -9,27 +8,42 @@ import {
   Input,
   SubmitButton,
   StyledGridForm,
-  Alert,
-  AlertText,
+  RequiredAlert,
 } from '../styles/Forms';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { addUser } from '../util/api';
-import { IUser, UserForm } from './Signup.types';
+import { UserForm } from './Signup.types';
 
 const SignupPage = () => {
-  const { handleSubmit, register, reset } = useForm<UserForm>();
-  
-  const { mutateAsync } = useMutation(addUser, {
+  const {
+    handleSubmit,
+    register,
+    reset,
+    formState: { errors },
+  } = useForm<UserForm>();
+
+  const { mutateAsync, isSuccess, data } = useMutation(addUser, {
+    useErrorBoundary: true,
     onSuccess: (data) => {
-      reset();
-      redirect('/login');
+      if (data.status !== 200) {
+        alert('Houve um erro, tente novamente.');
+        reset();
+      }
     },
-    onError: (err) => {
-      alert(err);
+    onError: () => {
+      alert('Houve um erro, tente novamente.');
+      reset();
     },
   });
 
-  const onSubmit : SubmitHandler<UserForm> = async (data) => await mutateAsync(data);
+  const onSubmit: SubmitHandler<UserForm> = async (data) =>
+    await mutateAsync(data);
+
+  if (isSuccess) {
+    if (data.status === 200) {
+      return <Navigate to='/login' />;
+    }
+  }
 
   return (
     <>
@@ -37,68 +51,77 @@ const SignupPage = () => {
         <Title>Criar Conta</Title>
         <StyledGridForm onSubmit={handleSubmit(onSubmit)}>
           <div>
+            {errors.user_name?.type === 'required' && (
+              <RequiredAlert role='alert'>Usuário é obrigatório.</RequiredAlert>
+            )}
             <InputIcon>
               <HiOutlineUser />
             </InputIcon>
             <Input
               type='text'
               placeholder='Nome'
-              {...register('profile_name')}
+              {...register('user_name', { required: true })}
             ></Input>
           </div>
+
           <div>
+            {errors.profile_name?.type === 'required' && (
+              <RequiredAlert role='alert'>Nome é obrigatório.</RequiredAlert>
+            )}
             <InputIcon>
               <HiOutlineUser />
             </InputIcon>
             <Input
               type='text'
-              placeholder='Nickname'
-              {...register('nickname')}
+              placeholder='Nome do Perfil'
+              {...register('profile_name', { required: true })}
             ></Input>
           </div>
           <div>
+            {errors.email?.type === 'required' && (
+              <RequiredAlert role='alert'>E-Mail é obrigatório.</RequiredAlert>
+            )}
             <InputIcon>
               <HiMail />
             </InputIcon>
             <Input
               type='email'
               placeholder='E-mail'
-              {...register('email')}
+              {...register('email', { required: true })}
             ></Input>
           </div>
           <div>
+            {errors.password?.type === 'required' && (
+              <RequiredAlert role='alert'>Senha é obrigatória.</RequiredAlert>
+            )}
             <InputIcon>
               <HiOutlineLockClosed />
             </InputIcon>
             <Input
               type='password'
               placeholder='Senha'
-              {...register('password')}
+              {...register('password', { required: true })}
             ></Input>
           </div>
           <div>
+            {errors.password?.type === 'required' && (
+              <RequiredAlert role='alert'>Confirme a senha.</RequiredAlert>
+            )}
             <InputIcon>
               <HiOutlineLockClosed />
             </InputIcon>
             <Input
               type='password'
               placeholder='Confirmar Senha'
-              {...register('password_confirm')}
+              {...register('password_confirm', { required: true })}
             ></Input>
-          </div>
-          <div>
-            <SubmitButton type='submit'>Cadastrar</SubmitButton>
+            <SubmitButton type='submit'>Cadastrar.</SubmitButton>
           </div>
         </StyledGridForm>
       </Container>
-      {/* <Alert>
-        <AlertText>
-          Alerta de polaco,Alerta de polaco,Alerta de polaco,Alerta de polaco
-          Alerta de polaco,Alerta de polaco,Alerta de polaco,Alerta de polaco
-        </AlertText>
-      </Alert> */}
     </>
   );
 };
 
 export default SignupPage;
+

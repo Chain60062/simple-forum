@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { UserContext } from '../context/UserContext';
@@ -11,6 +11,7 @@ import {
   InputIcon,
   Input,
   SubmitButton,
+  RequiredAlert,
 } from '../styles/Forms';
 import { login } from '../util/api';
 import { LoginForm } from './Login.types';
@@ -25,22 +26,23 @@ const LoginPage = () => {
     formState: { errors },
   } = useForm<LoginForm>();
 
-  const { mutateAsync, isSuccess } = useMutation(login, {
-    onSuccess: (data) => {
-      reset();
-      setLoggedUser(data);
-    },
-    onError: (err: Error) => {
-      alert(`Houve um erro: ${err.message}`);
+  const { mutate, isSuccess, data } = useMutation(login, {
+    onSuccess: async (data) => {
+      if (data.status === 401) {
+        reset();
+        alert(await data.json());
+      } else {
+        setLoggedUser(await data.json());
+      }
     },
   });
 
-  const onSubmit: SubmitHandler<LoginForm> = async (data) =>
-    await mutateAsync(data);
+  const onSubmit: SubmitHandler<LoginForm> = async (user) => mutate(user);
 
-  //Redirect after successful login attempt
   if (isSuccess) {
-    return <Navigate to='/' />;
+    if (data.status !== 401) {
+      return <Navigate to='/' />;
+    }
   }
 
   return (
@@ -54,9 +56,12 @@ const LoginPage = () => {
           <Input
             type='text'
             placeholder='E-mail'
-            {...register('email')}
+            {...register('email', { required: true })}
           ></Input>
         </Row>
+        {errors.email?.type === 'required' && (
+          <RequiredAlert role='alert'>E-Mail é obrigatório</RequiredAlert>
+        )}
         <Row>
           <InputIcon>
             <HiOutlineLockClosed />
@@ -64,9 +69,12 @@ const LoginPage = () => {
           <Input
             type='password'
             placeholder='Senha'
-            {...register('password')}
+            {...register('password', { required: true })}
           ></Input>
         </Row>
+        {errors.password?.type === 'required' && (
+          <RequiredAlert role='alert'>Senha é obrigatória</RequiredAlert>
+        )}
         <Row>
           <SubmitButton type='submit'>Entrar</SubmitButton>
         </Row>
@@ -74,5 +82,5 @@ const LoginPage = () => {
     </Container>
   );
 };
-
 export default LoginPage;
+

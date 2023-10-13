@@ -6,13 +6,17 @@ import Loading from './styles/Loading';
 import { GlobalStyle } from './App.styles';
 import routes from './routes.jsx';
 import { SERVER_URL } from './util/config';
-import './App.css';
+import ErrorBoundary from './error/ErrorBoundary.js';
+import ErrorComponent from './error/Error.js';
+import { UserAccount } from './interfaces/user.js';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+// import { useQuery } from '@tanstack/react-query';
 
 const queryClient = new QueryClient();
 const router = createBrowserRouter(routes);
 
 const App = () => {
-  const [loggedUser, setLoggedUser] = useState<any>(null);
+  const [loggedUser, setLoggedUser] = useState<UserAccount | null>(null);
 
   useEffect(() => {
     function fetchLoggedInUser() {
@@ -33,14 +37,18 @@ const App = () => {
   }, []);
 
   return (
-    <React.StrictMode>
-      <GlobalStyle />
-      <QueryClientProvider client={queryClient}>
-        <UserContext.Provider value={{ loggedUser, setLoggedUser }}>
-          <RouterProvider router={router} fallbackElement={<Loading />} />
-        </UserContext.Provider>
-      </QueryClientProvider>
-    </React.StrictMode>
+    <QueryClientProvider client={queryClient}>
+      {/* The rest of your application */}
+      <ErrorBoundary fallback={<ErrorComponent />}>
+        <React.StrictMode>
+          <GlobalStyle />
+            <UserContext.Provider value={{ loggedUser, setLoggedUser }}>
+              <RouterProvider router={router} fallbackElement={<Loading />} />
+            </UserContext.Provider>
+        </React.StrictMode>
+      </ErrorBoundary>
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
   );
 };
 

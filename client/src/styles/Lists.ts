@@ -1,16 +1,20 @@
 import styled from 'styled-components';
+import { StyledLink } from './Router';
+
 export const CenteredContainer = styled.div`
   display: flex;
   justify-content: center;
-  align-items: center;
-  height: calc(100vh - 54px);
+  align-items: flex-start;
+  margin-top: 54px;
+  height: calc(100vh - 108px); //margin + navbar height
 `;
+
 // Container
 export const ItemsBox = styled.div`
+  position: relative;
   display: flex;
   flex-wrap: wrap;
   align-content: flex-start;
-  position: relative;
   min-height: 60vh;
   min-width: 60vw;
   padding: 2rem;
@@ -22,6 +26,7 @@ export const ItemsBox = styled.div`
     max-width: 80vw;
   }
 `;
+
 export const ItemsTitle = styled.h1`
   width: 100%;
   color: white;
@@ -33,11 +38,12 @@ export const ItemsTitle = styled.h1`
   padding: 14px;
   border-radius: 12px;
 `;
+
 // Topic or Subtopic Card
 export const ItemsCard = styled.div`
   flex-basis: calc(50% - 8px); //or width: calc(50% - 12);
   /* width: calc((100% / 3) - 12px);//three columns */
-  max-height: 80px;
+  min-height: 80px;
   box-shadow: 2px 2px 6px 0 rgba(0, 0, 0, 0.3);
   border-radius: 12px;
   color: #0f362b;
@@ -54,6 +60,10 @@ export const ItemsCard = styled.div`
     flex-basis: 100%; /* Single card per row on smaller screens */
   }
 `;
+export const ItemsCardButtons = styled.div`
+display: flex;
+justify-content: flex-end;
+`;
 // Topic or Subtopic icon
 export const ItemsCardIcon = styled.img`
   height: 80%;
@@ -69,10 +79,14 @@ export const ItemsCardDescription = styled.div`
   margin-top: $xs;
 `;
 
-
-
-
-
-
-
-
+export const StyledItemsCardButton = styled.a`
+  display: flex;
+  border-radius: 50%;
+  margin: 0px 2px;
+  padding: 8px;
+  transition: background-color 0.3s;
+  &:hover {
+    color: #1e6c57;
+    background-color: #1a4f40;
+  }
+`;

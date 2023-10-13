@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { body } from 'express-validator';
-import pool from '../config/db/db.js';
+import pool from '../db/db.js';
 
 export const addSubtopic = async (
   req: Request<{ topicId: string }, object, { subtopic_name: string; description: string }>,

@@ -14,6 +14,7 @@ export const Container = styled.div`
   border-radius: 12px;
   box-shadow: 2px 2px 6px 0 rgba(0, 0, 0, 0.3);
 `;
+
 export const StyledGridForm = styled(Form)`
   padding: 30px;
   grid-template-columns: auto auto;
@@ -23,14 +24,16 @@ export const StyledGridForm = styled(Form)`
     grid-template-columns: auto;
   }
 `;
+
 export const StyledForm = styled(Form)`
   padding: 30px;
 `;
+
 export const Row = styled.div`
   height: 45px;
   margin-bottom: 15px;
-  position: relative;
 `;
+
 export const Title = styled.h1`
   height: 70px;
   background: linear-gradient(
@@ -45,6 +48,7 @@ export const Title = styled.h1`
   display: flex;
   justify-content: center;
 `;
+
 export const InputIcon = styled.i`
   position: absolute;
   z-index: 2;
@@ -67,12 +71,12 @@ export const Input = styled.input`
   outline: none;
   font-size: 14px;
   margin-bottom: 15px;
-  position: relative;
 
   &:focus {
     box-shadow: inset 0px 0px 2px 2px rgba(34, 54, 151, 0.5);
   }
 `;
+
 export const SubmitButton = styled.button`
   color: white;
   font-size: 24px;
@@ -97,7 +101,7 @@ export const Alert = styled.div`
 `;
 
 export const AlertText = styled.h4`
-  color: White;
+  color: white;
   vertical-align: bottom;
 `;
 
@@ -109,6 +113,7 @@ export const AddForm = styled(Form)`
     box-shadow: inset 0px 0px 2px 2px rgba(26, 188, 156, 0.25);
   }
 `;
+
 export const TextInput = styled.input`
   display: block;
   padding: 8px;
@@ -116,10 +121,6 @@ export const TextInput = styled.input`
   width: 100%;
   border: 0px;
   border-radius: 12px;
-
-  &:hover{
-    border: 1px solid #223697;
-  }
 `;
 
 export const FormFooter = styled.div`
@@ -129,14 +130,38 @@ export const FormFooter = styled.div`
 `;
 export const Submit = styled.button`
   position: absolute;
+  bottom: 0;
+  left: 0;
   width: 8rem;
-  padding: 12px 16px 12px 16px;
-  color: White;
+  padding: 12px 16px;
+  margin: 12px;
   border-radius: 8px;
   font-size: 16px;
   border: none;
   outline: none;
-  right: 12;
-  bottom: 12;
+  background-color: #0f362b;
+  color: #349e81;
+`;
+
+export const AdminContainer = styled.div`
+  position: relative;
+  width: 60vw;
+  min-height: 30vh;
+  margin: 12px auto;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  box-shadow: 2px 2px 6px 0 rgba(0, 0, 0, 0.3);
+  background-color: #349e81;
+`;
+export const RequiredAlert = styled.p`
+  color: #fa0707;
+  font-weight: bold;
+  font-size: 16px;
+`;
+
+export const AdminLabel = styled.label`
+  color: #0f362b;
+  font-size: 18px;
 `;
 

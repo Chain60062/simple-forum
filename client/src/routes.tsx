@@ -1,5 +1,5 @@
 import React from 'react';
-import ErrorPage from './error/Error';
+import ErrorPage from './error/NotFound';
 import Subtopics from './subtopics/Subtopics';
 import Profile from './profile/Profile';
 import LoginPage from './login/Login';

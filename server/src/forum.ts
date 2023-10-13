@@ -1,25 +1,23 @@
 import express from 'express';
 import session from 'express-session';
-import morgan from 'morgan';
-import path from 'node:path';
-import fs from 'node:fs';
 import { randomUUID } from 'node:crypto';
-import { fileURLToPath } from 'node:url';
 import errorHandler from './middleware/error.middleware.js';
 import cors from 'cors';
 import routes from './routes.js';
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+import logger from './utils/logger.js';
+
 const port = process.env.PORT || 8081;
 const secret = process.env.SECRET || 'supersecretkey';
 const app = express();
 
+// cors
 app.use(
   cors({
     credentials: true,
     origin: 'http://localhost:5173',
   }),
 );
+// static directory
 app.use(express.json());
 app.use(express.static('public'));
 // session
@@ -38,12 +36,7 @@ app.use(
     },
   }),
 );
-// logging
-const accessLogStream = fs.createWriteStream(__dirname + '/access.log', {
-  flags: 'a',
-});
-app.use(morgan('combined', { stream: accessLogStream }));
-app.use(routes);
-app.use(errorHandler);
-app.listen(port, () => console.log(`Rodando na porta: ${port}`));
+app.use(routes); //routes
+app.use(errorHandler); //error handling
+app.listen(port, () => logger.info(`Running app. Port: ${port}`));
 

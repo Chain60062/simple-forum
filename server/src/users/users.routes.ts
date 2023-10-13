@@ -5,9 +5,10 @@ import {
   editUser,
   getUserByUsername,
   getUserByEmail,
+  createAdminAccount,
 } from './users.model.js';
 import upload from '../config/multer.config.js';
-import { body, check } from 'express-validator';
+import { body } from 'express-validator';
 const router = Router();
 
 router.post(
@@ -30,8 +31,11 @@ router.post(
     .withMessage('A senha deve ter no mínimo 6 caractéres e no máximo 256'),
   createUser,
 );
+
 router.put('/', upload.single('avatar'), editUser);
 router.delete('/', deleteUser);
-router.get('/:username', getUserByUsername);
+router.get('/:user_name', getUserByUsername);
+router.post('/admin', createAdminAccount)
+
 export default router;
 

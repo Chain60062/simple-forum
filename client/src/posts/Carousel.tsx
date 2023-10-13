@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { SERVER_URL } from '../util/config';
 import { StyledLink } from '../styles/Router';
 import { PostImageCarouselProps } from './Posts.types';
 import { HiOutlineChevronLeft, HiOutlineChevronRight } from 'react-icons/hi';
 import styled from 'styled-components';
 
-function Carousel(props: PostImageCarouselProps) {
+function Carousel({ images, link }: PostImageCarouselProps) {
   const [currentSlideIndex, setSlideImageIndex] = useState(0);
-  const numberOfSlides = props.images?.length;
+  const numberOfSlides = images?.length;
   function nextSlideImage() {
     setSlideImageIndex((currentSlideIndex + 1) % numberOfSlides);
   }
@@ -18,10 +18,10 @@ function Carousel(props: PostImageCarouselProps) {
   return (
     <StyledCarouselContainer>
       <StyledCarouselSlide>
-        {props.images && (
-          <StyledLink to={props.link}>
+        {images && (
+          <StyledLink to={link}>
             <StyledCarouselSlideImage
-              src={`${SERVER_URL}/${props.images[Math.abs(currentSlideIndex)]}`}
+              src={`${SERVER_URL}/${images[Math.abs(currentSlideIndex)]}`}
             />
           </StyledLink>
         )}

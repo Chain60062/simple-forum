@@ -72,7 +72,7 @@ export default function Replies() {
       ) : (
         <>
           <AddCommentContainer>
-            {/* <AddForm onSubmit={handleSubmit(onSubmit)}>
+            <AddForm onSubmit={handleSubmit(onSubmit)}>
               <label htmlFor='name'>Comentário</label>
               <TextInput
                 type='text'
@@ -89,7 +89,7 @@ export default function Replies() {
                <FormFooter>
                 <Submit type='submit'>Comentar</Submit>
               </FormFooter>
-            </AddForm> */}
+            </AddForm>
           </AddCommentContainer>
 
           <RepliesContainer>

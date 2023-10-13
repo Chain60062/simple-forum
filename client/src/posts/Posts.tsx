@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { HiOutlinePencilAlt, HiTrash } from 'react-icons/hi';
@@ -33,23 +33,16 @@ const Posts = () => {
   } = useForm<PostFormData>();
 
   const { mutate } = useMutation(addPost, {
-    onSuccess: async (newPost): Promise<void> => {
-      queryClient.setQueryData<IPost[] | undefined>(['posts'], (old) => [
-        newPost,
-        ...(old as IPost[]),
-      ]);
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['posts'] });
     },
     onError: (err) => {
       alert(`there was an error ${err}`);
     },
   });
 
-  const { isError, isLoading, data, error } = useQuery(
-    ['posts'],
-    () => getPosts(subtopicId as string),
-    {
-      refetchOnWindowFocus: false,
-    }
+  const { isLoading, data, isError, error } = useQuery(['posts'], () =>
+    getPosts(subtopicId!)
   );
 
   const onSubmit = (data: PostFormData) => {
@@ -118,11 +111,10 @@ const Posts = () => {
 };
 // A single post
 const Post = (props: PostProps) => {
-
   return (
     <PostCard>
       <h2>{props.title}</h2>
-    <Carousel images={props.files} link={props.link} />
+      <Carousel images={props.files} link={props.link} />
       <p>{props.message}</p>
       <PostFooter>
         <HiOutlinePencilAlt size={2} />
@@ -145,4 +137,5 @@ const Sidebar = () => {
   );
 };
 export default Posts;
+
 

@@ -1,4 +1,4 @@
-import pool from '../config/db/db.js';
+import pool from '../db/db.js';
 import { Request, Response, NextFunction } from 'express';
 export const addTopic = async (
   req: Request<object, object, { topic_name: string; description: string }>,
@@ -26,9 +26,13 @@ export const deleteTopic = async (
   try {
     const topicId = req.params.topicId;
     const sqlQuery = 'DELETE FROM topic WHERE topic_id = $1';
-    await pool.query(sqlQuery, [topicId]);
+    const deletedTopic = await pool.query(sqlQuery, [topicId]);
 
-    res.status(200).json('Tópico deletado com sucesso');
+    if(deletedTopic.rowCount !== 1){
+      return res.status(400).json('Não foi possível deletar o tópico.');
+    }
+
+    return res.status(200).json('Tópico deletado com sucesso.');
   } catch (err) {
     next(err);
   }

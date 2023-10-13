@@ -1,18 +1,18 @@
 import styled from 'styled-components';
-import ErrorImage from '../assets/404.png';
+import NotFoundImage from '../assets/404.png';
 
-export const ErrorPageContainer = styled.div`
+export const NotFoundPageContainer = styled.div`
   width: 100%;
   height: 100vh;
-  background: url(${ErrorImage});
+  background: url(${NotFoundImage});
   background-size: cover;
 `;
 
-export const ErrorContainer = styled.div`
+export const NotFoundContainer = styled.div`
   min-height: 50vh;
   min-width: 50vw;
   border-radius: 18px;
-  background-color: $secondary;
+  background-color: #223697;
   color: white;
   box-shadow: 2px 2px 8px 0 rgba(0, 0, 0, 0.3);
   position: absolute;
@@ -24,7 +24,8 @@ export const ErrorContainer = styled.div`
     min-width: 95vw;
   }
 `;
-export const ErrorText = styled.div`
+export const NotFoundText = styled.div`
+  text-align: center;
   position: absolute;
   top: 50%;
   left: 50%;

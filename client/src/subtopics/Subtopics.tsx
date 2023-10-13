@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -6,7 +6,7 @@ import { UserContext } from '../context/UserContext';
 import { SERVER_URL } from '../util/config';
 import List, { ItemCard as Card } from '../common/Lists'; //ItemsList as List, ItemCard
 import { getSubtopics } from '../util/api';
-import { AdminContainer } from './Subtopics.styles';
+import { AdminContainer, RequiredAlert , AdminLabel} from '../styles/Forms';
 import { AddForm, TextInput, FormFooter, Submit } from '../styles/Forms';
 import { CenteredContainer } from '../styles/Lists';
 import { ISubtopic, SubtopicForm } from './Subtopics.types';
@@ -43,9 +43,6 @@ const Subtopics = () => {
         (old) => [newSubtopic, ...(old as Array<ISubtopic>)]
       );
     },
-    onError: (err) => {
-      alert(`there was an error ${err}`);
-    },
   });
 
   if (isLoading) {
@@ -60,10 +57,10 @@ const Subtopics = () => {
   }
   return (
     <>
-      {loggedUser?.profile_role == 'admin' && (
+      {loggedUser?.user_role == 'admin' && (
         <AdminContainer>
           <AddForm onSubmit={handleSubmit(onSubmit)}>
-            <label htmlFor='name'>Título</label>
+            <AdminLabel htmlFor='name'>Título</AdminLabel>
             <TextInput
               type='text'
               id='title'
@@ -71,10 +68,10 @@ const Subtopics = () => {
               aria-invalid={errors.subtopic_name ? 'true' : 'false'}
             />
             {errors.subtopic_name?.type === 'required' && (
-              <p role='alert'>Nome é obrigatório</p>
+              <RequiredAlert role='alert'>Nome é obrigatório</RequiredAlert>
             )}
 
-            <label htmlFor='description'>Título</label>
+            <AdminLabel htmlFor='description'>Título</AdminLabel>
             <TextInput
               type='text'
               id='title'
@@ -82,7 +79,7 @@ const Subtopics = () => {
               aria-invalid={errors?.description ? 'true' : 'false'}
             />
             {errors.description?.type === 'required' && (
-              <p role='alert'>Descrição é obrigatória</p>
+              <RequiredAlert role='alert'>Descrição é obrigatória</RequiredAlert>
             )}
 
             <FormFooter>

@@ -6,19 +6,20 @@ interface INavLinkProps {
 
 export const TopNavBody = styled.div`
   background-color: #223697;
-  overflow: hidden;
+  height: 54px;
   grid-area: topnav;
 `;
 
 export const NavLink = styled(Link)<INavLinkProps>`
   float: left;
   color: white;
-  border-radius: 12px;
-  margin: 8px 2px;
+  border-radius: 6px;
+  margin: 8px;
+  padding: 8px 14px;
   text-align: center;
-  padding: 8px 12px;
   text-decoration: none;
   font-size: 18px;
+  transition: background-color .3s;
 
   &:not(:first-child) {
     @media (max-width: 900px) {
@@ -27,6 +28,7 @@ export const NavLink = styled(Link)<INavLinkProps>`
   }
 
   &:hover {
+    background-color: #4e5eab;
     color: white;
   }
 `;
@@ -50,4 +52,6 @@ export const TopNavIcon = styled.a<INavLinkProps>`
     }
   `}
 `;
+
+
 

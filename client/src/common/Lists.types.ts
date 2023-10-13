@@ -1,11 +1,13 @@
-import type { PropsWithChildren } from 'react';
-
-export type ListProps = PropsWithChildren<{
+import { ReactNode } from 'react';
+export interface ListProps {
   title: string;
-}>;
-export type CardProps = {
+  children: ReactNode;
+}
+
+export interface CardProps {
   title: string;
   description: string;
   link: string;
+  children?: ReactNode;
 }
 

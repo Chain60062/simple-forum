@@ -1,4 +1,3 @@
-import React from 'react';
 import { StyledLink } from '../styles/Router';
 import { CardProps, ListProps } from './Lists.types';
 import {
@@ -9,25 +8,29 @@ import {
   ItemsTitle,
 } from '../styles/Lists';
 
-const ItemsList = (props: ListProps) => {
+
+const ItemsList = ({children, title}: ListProps) => {
   return (
     <ItemsBox>
-      <ItemsTitle>{props.title}</ItemsTitle>
-      {props.children}
+      <ItemsTitle>{title}</ItemsTitle>
+      {children}
     </ItemsBox>
   );
 };
 
-export const ItemCard = (props: CardProps) => {
+export const ItemCard = ({ children, description, link, title }: CardProps) => {
   return (
-      <ItemsCard>
-        <StyledLink to={props.link}>
-          <ItemsCardTitle>{props.title}</ItemsCardTitle>
-          <ItemsCardDescription>{props.description}</ItemsCardDescription>
-        </StyledLink>
-      </ItemsCard>
+    <ItemsCard>
+      <StyledLink to={link}>
+        <ItemsCardTitle>{title}</ItemsCardTitle>
+        <ItemsCardDescription>{description}</ItemsCardDescription>
+      </StyledLink>
+      {children}
+    </ItemsCard>
   );
 };
 
 export default ItemsList;
+
+
 

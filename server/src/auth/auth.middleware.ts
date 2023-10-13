@@ -6,4 +6,3 @@ export const isAuthenticated = (req: Request, res: Response, next: NextFunction)
     ? next()
     : res.status(401).json({ status: 401, message: 'Usuário não autorizado' });
 };
-

@@ -1,0 +1,87 @@
+DROP DATABASE IF EXISTS simpleforum;
+CREATE DATABASE simpleforum;
+
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+CREATE TABLE IF NOT EXISTS topic(
+    topic_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    topic_name VARCHAR(32) NOT NULL,
+    description TEXT NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS subtopic(
+    subtopic_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    subtopic_name VARCHAR(32) NOT NULL,
+    topic_id INT NOT NULL,
+    description TEXT NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS user_account(
+    user_id uuid DEFAULT uuid_generate_v4() PRIMARY KEY NOT NULL,
+    user_name VARCHAR(64) NOT NULL,
+    user_role VARCHAR(16) NOT NULL,
+    profile_id INT,
+    email VARCHAR(128) UNIQUE NOT NULL,
+    email_is_verified BOOL,
+    cipher TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS profile(
+    profile_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    avatar TEXT DEFAULT 'public/images/default.png',
+    profile_name VARCHAR(32) UNIQUE NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS reply(
+    reply_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    post_id INT NOT NULL,
+    user_id uuid NOT NULL,
+    parent_id INT,
+    message VARCHAR(2000) NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS post(
+    post_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    user_id uuid NOT NULL,
+    subtopic_id INT NOT NULL,
+    title VARCHAR(64) NOT NULL,
+    message VARCHAR(2000) NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS file(
+    file_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    post_id INT,
+    reply_id INT,
+    file_path TEXT NOT NULL,
+    alt VARCHAR(16) NOT NULL
+);
+
+-- FOREIGN KEYS
+ALTER TABLE post
+ADD FOREIGN KEY (user_id) REFERENCES user_account(user_id) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE post
+ADD FOREIGN KEY (subtopic_id) REFERENCES subtopic(subtopic_id) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE reply
+ADD FOREIGN KEY (post_id) REFERENCES post(post_id) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE reply
+ADD FOREIGN KEY (user_id) REFERENCES user_account(user_id) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE file
+ADD FOREIGN KEY (post_id) REFERENCES post(post_id) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE file
+ADD FOREIGN KEY (reply_id) REFERENCES reply(reply_id) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE subtopic
+ADD FOREIGN KEY (topic_id) REFERENCES topic(topic_id) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE user_account
+ADD FOREIGN KEY (profile_id) REFERENCES profile(profile_id) ON DELETE CASCADE ON UPDATE CASCADE;

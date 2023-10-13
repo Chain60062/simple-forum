@@ -5,7 +5,7 @@ const router = Router();
 router.get('/', listTopics);
 router.post('/', addTopic);
 router.patch('/:id', editTopic);
-router.delete('/:id', deleteTopic);
+router.delete('/:topicId', deleteTopic);
 
 export default router;
 

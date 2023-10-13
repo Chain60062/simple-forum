@@ -2,7 +2,7 @@ import { LoginForm } from '../login/Login.types';
 import { PostFormData } from '../posts/Posts.types';
 import { ReplyForm } from '../replies/Replies.types';
 import { UserForm } from '../signup/Signup.types';
-import { ITopic } from '../topics/Topics.types';
+import { ITopic, TopicForm } from '../topics/Topics.interfaces';
 import { SERVER_URL } from './config';
 //
 // TOPICS
@@ -20,12 +20,50 @@ export const getTopics = async () => {
   if (!res?.ok) {
     throw new Error('Erro inesperado na requisição.');
   }
+
+  return res.json();
+};
+export const deleteTopic = async (topicId: number) => {
+  const res = await fetch(`${SERVER_URL}/topics/${topicId}`, {
+    method: 'DELETE',
+    mode: 'cors',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (!res?.ok) {
+    throw new Error('Erro inesperado na requisição.');
+  }
+
+  return res.json();
+};
+interface EditTopicParams {
+  topic: TopicForm;
+  topicId: number;
+}
+export const updateTopic = async ({ topic, topicId }: EditTopicParams) => {
+  const res = await fetch(`${SERVER_URL}/topics/${topicId}`, {
+    method: 'PUT ',
+    mode: 'cors',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(topic),
+  });
+
+  if (!res?.ok) {
+    throw new Error('Erro inesperado na requisição.');
+  }
+
   return res.json();
 };
 //
 // SUBTOPICS
 //
-export const getSubtopics = async (topicId: string | undefined) => {
+export const getSubtopics = async (topicId: number | undefined) => {
   const res = await fetch(`${SERVER_URL}/subtopics/${topicId}`);
   return res.json();
 };
@@ -80,7 +118,6 @@ export const addPost = async ({ data, subtopicId }: AddPostParams) => {
     credentials: 'include',
     body: formData,
   });
-  console.dir(res.json);
   return res.json();
 };
 //
@@ -96,7 +133,7 @@ export const login = async (data: LoginForm) => {
     },
     body: JSON.stringify(data),
   });
-  return res.json();
+  return res;
 };
 
 export const isLoggedIn = async () => {
@@ -123,7 +160,7 @@ export const addUser = async (data: UserForm) => {
     },
     body: JSON.stringify(data),
   });
-  return res.json();
+  return res;
 };
 
 export const getUser = async (username: string) => {

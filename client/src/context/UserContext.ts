@@ -1,5 +1,8 @@
 import { createContext } from 'react';
-import { UserContextType } from '../types/user';
+import { UserContextType } from '../interfaces/user';
 
-export const UserContext = createContext<any>(null);
+export const UserContext = createContext<UserContextType>({
+  loggedUser: null,
+  setLoggedUser: () => {},
+});
 

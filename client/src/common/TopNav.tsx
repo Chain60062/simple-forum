@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import { useContext } from 'react';
 import { HiMenu } from 'react-icons/hi';
 import { TopNavBody, TopNavIcon, NavLink } from '../styles/TopNav';
 import { UserContext } from '../context/UserContext';
@@ -11,8 +11,8 @@ const TopNav = () => {
       <NavLink to='/'>Home</NavLink>
 
       {loggedUser ? (
-        <NavLink style={{ float: 'right' }} to={`/${loggedUser.nickname}`}>
-          {loggedUser.profile_name}
+        <NavLink style={{ float: 'right' }} to={`/${loggedUser.profile_name}`}>
+          {loggedUser.user_name}
         </NavLink>
       ) : (
         <>
