@@ -1,11 +1,10 @@
-# Simple Forum
-Simple forum in node.js, personal project for studying purposes, it uses typescript and libraries such as react, express, stitches, multer and others.
+# Simple-Forum
+This is a forum written in TypeScript for studying purposes. It uses the following libraries:
 
-To run it first change directory and install all packages(both in the server folder and the client one):
+Backend: Express, Multer...
+Frontend: React, Tanstack Query, Vite, Styled Components, React Icons...
 
-```
-cd <server / client>
-```
+To run it first change directory and install all packages(both in the server directory and the client one):
 ```
 npm install # or
 pnpm install # or
@@ -13,17 +12,17 @@ yarn install
 ```
 
 ## Client
-The client is made using react and some other libraries like vite, stitches, react-icons, etc, they should be installed with one of the install commands above. The scripts to run are dev, build and preview, choose the one that fits you best.
+You should be run `npm install` in the client directory first before running any of the scripts. To run a development server locally run:
 ```
-<npm / yarn / pnpm> run <dev/ build / preview>
+npm run dev
 ```
 ## Database
-In the server/config/db folder there is a sql file, just run the script and make sure you got a more recent Postgresql
+In the server/config/db folder there is a sql file, just run the script and make sure you got the most recent Postgresql version.
 
 ## Server
-The server uses express and should also be installed with one of the install commands shown before. There are also two scripts in the project , dev and build.
+The server dependencies should also be installed with `npm install`. To run a development server locally run:
 Again, to run it use:
 ```
-<npm / yarn / pnpm> run <dev / build>
+npm run dev
 ```
-That's it, make sure that the database, client and server are running and can contact each other and the application should be fully functional, have fun.
+That's it, make sure that the database, client and server are running and the application should be fully functional, have fun.
