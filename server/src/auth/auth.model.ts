@@ -40,7 +40,7 @@ export const signOut = async (req: Request, res: Response, next: NextFunction) =
       req.session.destroy((err) => next(err));
       res.clearCookie('simpleforum_sessioncookie');
     }
-    return res.sendStatus(200);
+    return res.sendStatus(302);
   } catch (err) {
     next(err);
   }

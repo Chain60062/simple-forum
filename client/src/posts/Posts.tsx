@@ -45,16 +45,20 @@ const Posts = () => {
     getPosts(subtopicId!)
   );
 
-  const onSubmit = (data: PostFormData) => {
-    mutate({ data, subtopicId });
+  const onSubmit = async (post: PostFormData) => {
+    if (subtopicId) {
+      mutate({ post, subtopicId: Number(subtopicId) });
+    } else {
+      throw new Response('Erro interno', { status: 500 });
+    }
   };
 
   if (isLoading) {
-    return <span>Loading...</span>;
+    return <span>Carregando...</span>;
   }
 
   if (error instanceof Error && isError) {
-    return <span>Error: {error.message}</span>;
+    return <span>Erro: {error.message}</span>;
   }
 
   return (
@@ -65,7 +69,7 @@ const Posts = () => {
         {loggedUser && (
           <AddPostContainer>
             <AddForm onSubmit={handleSubmit(onSubmit)}>
-              <label htmlFor='postTitle'>Título</label>
+              <label htmlFor='title'>Título</label>
               <TextInput
                 type='text'
                 id='title'
@@ -75,7 +79,7 @@ const Posts = () => {
               {errors.title?.type === 'required' && (
                 <p role='alert'>First name is required</p>
               )}
-              <label htmlFor='postMessage'>Mensagem</label>
+              <label htmlFor='message'>Mensagem</label>
 
               <TextArea
                 id='message'
@@ -137,5 +141,4 @@ const Sidebar = () => {
   );
 };
 export default Posts;
-
 

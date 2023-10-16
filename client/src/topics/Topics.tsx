@@ -15,7 +15,7 @@ const Topics = () => {
     queryFn: getTopics,
   });
   if (isLoading) {
-    return <span>Loading...</span>;
+    return <span>Carregando...</span>;
   }
   if (error instanceof Error && isError) {
     return <ErrorComponent />;

@@ -1,12 +1,11 @@
 import { useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { UserContext } from '../context/UserContext';
-import { SERVER_URL } from '../util/config';
 import List, { ItemCard as Card } from '../common/Lists'; //ItemsList as List, ItemCard
-import { getSubtopics } from '../util/api';
-import { AdminContainer, RequiredAlert , AdminLabel} from '../styles/Forms';
+import { addSubtopic, getSubtopics } from '../util/api';
+import { AdminContainer, RequiredAlert, AdminLabel } from '../styles/Forms';
 import { AddForm, TextInput, FormFooter, Submit } from '../styles/Forms';
 import { CenteredContainer } from '../styles/Lists';
 import { ISubtopic, SubtopicForm } from './Subtopics.types';
@@ -15,7 +14,7 @@ const Subtopics = () => {
   const { topicId } = useParams();
   const { loggedUser } = useContext(UserContext);
   const { data, error, isError, isLoading } = useQuery(['subtopics'], () =>
-    getSubtopics(topicId)
+    getSubtopics(Number(topicId))
   );
   const {
     register,
@@ -23,20 +22,8 @@ const Subtopics = () => {
     formState: { errors },
   } = useForm<SubtopicForm>();
   const queryClient = useQueryClient();
-  const addSubtopic = async (data: SubtopicForm) => {
-    const res = await fetch(`${SERVER_URL}/subtopics/${topicId}`, {
-      method: 'POST',
-      mode: 'cors',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
-    return res.json();
-  };
 
-  const { mutateAsync } = useMutation(addSubtopic, {
+  const { mutate } = useMutation(addSubtopic, {
     onSuccess: async (newSubtopic) => {
       queryClient.setQueryData<Array<ISubtopic> | undefined>(
         ['subtopics'],
@@ -49,18 +36,23 @@ const Subtopics = () => {
     return <span>Loading...</span>;
   }
 
-  const onSubmit: SubmitHandler<SubtopicForm> = async (data) =>
-    await mutateAsync(data);
+  const onSubmit = async (subtopic: SubtopicForm) => {
+    if (topicId != undefined) {
+      mutate({ subtopic, topicId: Number(topicId) });
+    } else {
+      throw new Response('Erro interno', { status: 500 });
+    }
+  };
 
   if (error instanceof Error && isError) {
-    return <span>Error: {error.message}</span>;
+    return <span>Erro: {error.message}</span>;
   }
   return (
     <>
       {loggedUser?.user_role == 'admin' && (
         <AdminContainer>
           <AddForm onSubmit={handleSubmit(onSubmit)}>
-            <AdminLabel htmlFor='name'>Título</AdminLabel>
+            <AdminLabel htmlFor='title'>Título</AdminLabel>
             <TextInput
               type='text'
               id='title'
@@ -71,15 +63,17 @@ const Subtopics = () => {
               <RequiredAlert role='alert'>Nome é obrigatório</RequiredAlert>
             )}
 
-            <AdminLabel htmlFor='description'>Título</AdminLabel>
+            <AdminLabel htmlFor='description'>Descrição</AdminLabel>
             <TextInput
               type='text'
-              id='title'
+              id='description'
               {...register('description', { required: true, maxLength: 64 })}
               aria-invalid={errors?.description ? 'true' : 'false'}
             />
             {errors.description?.type === 'required' && (
-              <RequiredAlert role='alert'>Descrição é obrigatória</RequiredAlert>
+              <RequiredAlert role='alert'>
+                Descrição é obrigatória
+              </RequiredAlert>
             )}
 
             <FormFooter>
@@ -105,3 +99,4 @@ const Subtopics = () => {
 };
 
 export default Subtopics;
+

@@ -1,4 +1,3 @@
-import React from 'react';
 import ErrorPage from './error/NotFound';
 import Subtopics from './subtopics/Subtopics';
 import Profile from './profile/Profile';
@@ -8,6 +7,7 @@ import Navigation from './common/Navigation';
 import Topics from './topics/Topics';
 import Posts from './posts/Posts';
 import Replies from './replies/Replies';
+import { userExists } from './util/api';
 
 const routes = [
   {
@@ -30,6 +30,7 @@ const routes = [
       {
         path: ':username',
         element: <Profile />,
+        loader: userExists,//checar se perfil de usuario existe
       },
       {
         path: 'login',
@@ -38,6 +39,9 @@ const routes = [
       {
         path: 'cadastro',
         element: <SignupPage />,
+      },
+      {
+        path: 'logout',
       },
       {
         path: ':topicId/subtopics/:subtopicId/posts/:postId',
@@ -52,3 +56,4 @@ const routes = [
 ];
 
 export default routes;
+

@@ -1,7 +1,9 @@
+import { LoaderFunctionArgs } from 'react-router-dom';
 import { LoginForm } from '../login/Login.types';
 import { PostFormData } from '../posts/Posts.types';
 import { ReplyForm } from '../replies/Replies.types';
 import { UserForm } from '../signup/Signup.types';
+import { SubtopicForm } from '../subtopics/Subtopics.types';
 import { ITopic, TopicForm } from '../topics/Topics.interfaces';
 import { SERVER_URL } from './config';
 //
@@ -80,6 +82,24 @@ export const addTopic = async (data: ITopic) => {
   });
   return res.json();
 };
+
+interface AddSubtopicParams {
+  subtopic: SubtopicForm;
+  topicId: number;
+}
+
+export const addSubtopic = async ({ subtopic, topicId }: AddSubtopicParams) => {
+  const res = await fetch(`${SERVER_URL}/subtopics/${topicId}`, {
+    method: 'POST',
+    mode: 'cors',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(subtopic),
+  });
+  return res.json();
+};
 //
 // POSTS
 //
@@ -99,17 +119,17 @@ export const getPosts = async (subtopicId: string) => {
 };
 
 interface AddPostParams {
-  data: PostFormData;
-  subtopicId: string | undefined;
+  post: PostFormData;
+  subtopicId: number;
 }
-export const addPost = async ({ data, subtopicId }: AddPostParams) => {
+export const addPost = async ({ post, subtopicId }: AddPostParams) => {
   const formData = new FormData();
 
-  formData.append('title', data.title);
-  formData.append('message', data.message);
+  formData.append('title', post.title);
+  formData.append('message', post.message);
 
   // Append the files to the FormData object
-  for (const file of data.files) {
+  for (const file of post.files) {
     formData.append('files', file, file.name);
   }
   const res = await fetch(`${SERVER_URL}/posts/${subtopicId}`, {
@@ -146,6 +166,38 @@ export const isLoggedIn = async () => {
     },
   });
   return res.json();
+};
+
+export const userExists = async ({ params }: LoaderFunctionArgs) => {
+  const user = await fetch(`${SERVER_URL}/users/${params.username}`);
+  if (user.status === 404) {
+    throw new Response('Não Encontrado', { status: 404 });
+  }
+  return true;
+};
+
+export const logout = async () => {
+  await fetch(`${SERVER_URL}/auth/signout`, {
+    method: 'POST',
+    mode: 'cors',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+};
+
+export const getLoggedInUser = async () => {
+  const res = await fetch(`${SERVER_URL}/auth/login`, {
+    method: 'GET',
+    mode: 'cors',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+  const user = await res.json();
+  return user;
 };
 //
 // PROFILE/USERS

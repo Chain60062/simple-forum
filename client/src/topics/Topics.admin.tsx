@@ -40,7 +40,6 @@ const TopicsAdmin = (props: AdminTopicsProps) => {
   // Delete
   const deleteMutation = useMutation(deleteTopic, {
     onSuccess: () => {
-      console.log('removido');
       queryClient.invalidateQueries({
         queryKey: ['topics'],
         exact: true,
@@ -53,8 +52,7 @@ const TopicsAdmin = (props: AdminTopicsProps) => {
     await addMutation.mutate(data);
 
   const handleDelete = async (topicId: number) => {
-    if (window.confirm('Are you sure you want to delete this item?')) {
-      // Mutate the query to remove the item from the cache
+    if (window.confirm('Tem certeza de que quer remover este item?')) {
       await deleteMutation.mutate(topicId);
     }
   };
@@ -63,10 +61,10 @@ const TopicsAdmin = (props: AdminTopicsProps) => {
     <>
       <AdminContainer>
         <AddForm onSubmit={handleSubmit(onSubmit)}>
-          <AdminLabel htmlFor='name'>Nome do Tópico</AdminLabel>
+          <AdminLabel htmlFor='topic_name'>Nome do Tópico</AdminLabel>
           <TextInput
             type='text'
-            id='title'
+            id='topic_name'
             {...register('topic_name', { required: true, maxLength: 64 })}
             aria-invalid={errors.topic_name ? 'true' : 'false'}
           />
@@ -77,7 +75,7 @@ const TopicsAdmin = (props: AdminTopicsProps) => {
           <AdminLabel htmlFor='description'>Descrição</AdminLabel>
           <TextInput
             type='text'
-            id='title'
+            id='description'
             {...register('description', { required: true, maxLength: 64 })}
             aria-invalid={errors?.description ? 'true' : 'false'}
           />

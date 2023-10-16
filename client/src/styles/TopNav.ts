@@ -33,6 +33,28 @@ export const NavLink = styled(Link)<INavLinkProps>`
   }
 `;
 
+export const LogoutNavLink = styled.a`
+  color: white;
+  border-radius: 6px;
+  margin: 8px;
+  padding: 8px 14px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 18px;
+  transition: background-color .3s;
+
+  &:not(:first-child) {
+    @media (max-width: 900px) {
+      display: none;
+    }
+  }
+
+  &:hover {
+    background-color: #4e5eab;
+    color: white;
+  }
+`;
+
 export const TopNavIcon = styled.a<INavLinkProps>`
   color: white;
   display: none;

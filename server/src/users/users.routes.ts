@@ -34,7 +34,7 @@ router.post(
 
 router.put('/', upload.single('avatar'), editUser);
 router.delete('/', deleteUser);
-router.get('/:user_name', getUserByUsername);
+router.get('/:username', getUserByUsername);
 router.post('/admin', createAdminAccount)
 
 export default router;

@@ -1,19 +1,35 @@
 import { useContext } from 'react';
 import { HiMenu } from 'react-icons/hi';
-import { TopNavBody, TopNavIcon, NavLink } from '../styles/TopNav';
+import { TopNavBody, TopNavIcon, NavLink, LogoutNavLink } from '../styles/TopNav';
 import { UserContext } from '../context/UserContext';
+import { logout } from '../util/api';
 
 const TopNav = () => {
   // const [isCollapsed, setIsCollapsed] = useState(false);
-  const { loggedUser } = useContext(UserContext);
+  const { loggedUser, setLoggedUser } = useContext(UserContext);
+
+  const signOut = async () => {
+    logout();
+    setLoggedUser(null);
+  };
+
   return (
     <TopNavBody>
       <NavLink to='/'>Home</NavLink>
 
       {loggedUser ? (
-        <NavLink style={{ float: 'right' }} to={`/${loggedUser.profile_name}`}>
-          {loggedUser.user_name}
-        </NavLink>
+        <>
+          <NavLink
+            style={{ float: 'right' }}
+            to={`/${loggedUser.profile_name}`}
+          >
+            {loggedUser.user_name}
+          </NavLink>
+
+          <LogoutNavLink style={{ float: 'right' }} onClick={() => signOut()}>
+            Logout
+          </LogoutNavLink>
+        </>
       ) : (
         <>
           <NavLink style={{ float: 'right' }} to='/cadastro'>

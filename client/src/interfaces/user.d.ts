@@ -11,5 +11,5 @@ export interface UserAccount {
 }
 export interface UserContextType {
   loggedUser?: UserAccount | null;
-  setLoggedUser: (loggedUser: UserAccount) => void;
+  setLoggedUser: (loggedUser: UserAccount | null) => void;
 }
