@@ -4,8 +4,8 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { HiOutlinePencilAlt, HiTrash } from 'react-icons/hi';
 import { useForm } from 'react-hook-form';
 import { UserContext } from '../context/UserContext';
-import TopNav from '../common/TopNav.jsx';
-import { addPost } from '../util/api';
+import TopNav from '../components/TopNav.js';
+import { addPost, getPosts } from '../api/posts';
 import {
   MainContent,
   Container,
@@ -17,8 +17,7 @@ import {
   AddPostContainer,
   PostFooter,
 } from './Posts.styles';
-import { getPosts } from '../util/api';
-import { PostProps, IPost, PostFormData } from './Posts.types';
+import { PostProps, IPost, PostForm } from './Posts.interfaces.js';
 import { AddForm, FormFooter, Submit, TextInput } from '../styles/Forms.js';
 import Carousel from './Carousel.js';
 
@@ -30,7 +29,7 @@ const Posts = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<PostFormData>();
+  } = useForm<PostForm>();
 
   const { mutate } = useMutation(addPost, {
     onSuccess: () => {
@@ -45,7 +44,7 @@ const Posts = () => {
     getPosts(subtopicId!)
   );
 
-  const onSubmit = async (post: PostFormData) => {
+  const onSubmit = async (post: PostForm) => {
     if (subtopicId) {
       mutate({ post, subtopicId: Number(subtopicId) });
     } else {
@@ -54,7 +53,7 @@ const Posts = () => {
   };
 
   if (isLoading) {
-    return <span>Carregando...</span>;
+    return <MainContent />;
   }
 
   if (error instanceof Error && isError) {

@@ -5,11 +5,11 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import Loading from './styles/Loading';
 import { GlobalStyle } from './App.styles';
 import routes from './routes.jsx';
-import ErrorBoundary from './error/ErrorBoundary.js';
-import ErrorComponent from './error/Error.js';
-import { UserAccount } from './interfaces/user.js';
+import ErrorBoundary from './error/ErrorBoundary';
+import ErrorComponent from './error/Error';
+import { UserAccount } from './interfaces/user';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { getLoggedInUser } from './util/api.js';
+import { getLoggedInUser } from './api/auth';
 // import { useQuery } from '@tanstack/react-query';
 
 const queryClient = new QueryClient();

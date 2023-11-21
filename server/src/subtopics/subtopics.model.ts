@@ -27,7 +27,7 @@ export const deleteSubtopic = async (req: Request, res: Response, next: NextFunc
     const sqlQuery = 'DELETE FROM subtopic WHERE subtopic_id = $1';
     await pool.query(sqlQuery, [topicId]);
 
-    res.status(201).json('Subtópico deletado com sucesso');
+    res.status(200).json('Subtópico deletado com sucesso');
   } catch (err) {
     next(err);
   }

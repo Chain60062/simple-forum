@@ -1,12 +1,13 @@
 import { useContext } from 'react';
-import List, { ItemCard as Card } from '../common/Lists'; //ItemsList as List, ItemCard
+import List, { ItemCard as Card } from '../components/Lists'; //ItemsList as List, ItemCard
 import { useQuery } from '@tanstack/react-query';
 import { UserContext } from '../context/UserContext';
-import { getTopics } from '../util/api';
+import { getTopics } from '../api/topics';
 import { ITopic } from './Topics.interfaces';
 import { CenteredContainer } from '../styles/Lists';
 import ErrorComponent from '../error/Error';
 import TopicsAdmin from './Topics.admin';
+import { MainContent } from '../posts/Posts.styles';
 
 const Topics = () => {
   const { loggedUser } = useContext(UserContext);
@@ -15,7 +16,7 @@ const Topics = () => {
     queryFn: getTopics,
   });
   if (isLoading) {
-    return <span>Carregando...</span>;
+    return <MainContent />;
   }
   if (error instanceof Error && isError) {
     return <ErrorComponent />;
@@ -43,4 +44,5 @@ const Topics = () => {
 };
 
 export default Topics;
+
 

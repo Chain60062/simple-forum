@@ -4,5 +4,5 @@ import { NextFunction, Response, Request } from 'express';
 export const isAuthenticated = (req: Request, res: Response, next: NextFunction) => {
   return req.session.user
     ? next()
-    : res.status(401).json({ status: 401, message: 'Usuário não autorizado' });
+    : res.status(401).json({ status: 401, message: 'Usuário não autenticado' });
 };

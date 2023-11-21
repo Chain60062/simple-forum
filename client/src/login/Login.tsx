@@ -13,7 +13,7 @@ import {
   SubmitButton,
   RequiredAlert,
 } from '../styles/Forms';
-import { login } from '../util/api';
+import { login } from '../api/auth';
 import { LoginForm } from './Login.types';
 import { Navigate } from 'react-router-dom';
 

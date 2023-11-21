@@ -8,6 +8,7 @@ export const RepliesContainer = styled.div`
   border-radius: 12px;
   font-size: 14px;
   box-shadow: 2px 2px 6px 0 rgba(0, 0, 0, 0.3);
+  background-color: #349e81;
 `;
 export const PostContainer = styled.div`
   position: relative;
@@ -18,8 +19,9 @@ export const PostContainer = styled.div`
   border-radius: 12px;
   font-size: 14px;
   box-shadow: 2px 2px 6px 0 rgba(0, 0, 0, 0.3);
-  background-color: $primary;
+  background-color: white;
 `;
+
 export const AddCommentContainer = styled.div`
   position: relative;
   width: 80%;
@@ -29,7 +31,7 @@ export const AddCommentContainer = styled.div`
   border-radius: 12px;
   font-size: 14px;
   box-shadow: 2px 2px 6px 0 rgba(0, 0, 0, 0.3);
-  background-color: $primary;
+  background-color: #349e81;
 `;
 
 export const ReplyContainer = styled.div`
@@ -41,8 +43,11 @@ export const ReplyContainer = styled.div`
   border-radius: 12px;
   font-size: 14px;
   box-shadow: 2px 2px 6px 0 rgba(0, 0, 0, 0.3);
-  background-color: $primary;
+  background-color: white;
   align-items: center;
+`;
+export const ReplyComment = styled.span`
+  white-space: pre-wrap;
 `;
 export const ReplyAvatar = styled.img`
   height: 50px;
@@ -68,3 +73,6 @@ export const Dropdown = styled.div`
     display: block;
   }
 `;
+
+
+

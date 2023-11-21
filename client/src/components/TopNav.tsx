@@ -2,7 +2,7 @@ import { useContext } from 'react';
 import { HiMenu } from 'react-icons/hi';
 import { TopNavBody, TopNavIcon, NavLink, LogoutNavLink } from '../styles/TopNav';
 import { UserContext } from '../context/UserContext';
-import { logout } from '../util/api';
+import { logout } from '../api/auth';
 
 const TopNav = () => {
   // const [isCollapsed, setIsCollapsed] = useState(false);

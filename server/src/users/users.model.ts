@@ -147,7 +147,7 @@ export const deleteUser = async (req: Request, res: Response, next: NextFunction
 export const getUserByUsername = async (req: Request, res: Response, next: NextFunction) => {
   const username = req.params.username;
   try {
-    const user = await pool.query('SELECT * FROM user_account u LEFT JOIN profile p ON u.profile_id = p.profile_id WHERE u.user_name = $1', [username]);
+    const user = await pool.query('SELECT * FROM user_account u LEFT JOIN profile p ON u.profile_id = p.profile_id WHERE p.profile_name  = $1', [username]);
 
     if(user.rows.length === 0) return res.sendStatus(404);
     

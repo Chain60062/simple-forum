@@ -14,7 +14,7 @@ export interface IPost {
   files: string[];
 }
 
-export interface PostFormData {
+export interface PostForm {
   message: string;
   title: string;
   files: FileList;

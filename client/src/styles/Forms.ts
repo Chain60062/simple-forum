@@ -121,6 +121,9 @@ export const TextInput = styled.input`
   width: 100%;
   border: 0px;
   border-radius: 12px;
+  &:focus {
+    outline: none;
+  }
 `;
 
 export const FormFooter = styled.div`

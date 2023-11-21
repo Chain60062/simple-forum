@@ -1,31 +1,37 @@
 import { AdminContainer, AdminLabel, RequiredAlert } from '../styles/Forms';
 import { AddForm, TextInput, FormFooter, Submit } from '../styles/Forms';
 import List, { ItemCard as Card } from '../components/Lists';
-import { SubmitHandler, useForm } from 'react-hook-form';
-import { addTopic, deleteTopic, updateTopic } from '../api/topics';
+import { useForm } from 'react-hook-form';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { AdminTopicsProps, ITopic } from './Topics.interfaces';
 import {
   CenteredContainer,
   ItemsCardButtons,
   StyledItemsCardButton,
 } from '../styles/Lists';
 import { HiOutlinePencilAlt, HiOutlineTrash } from 'react-icons/hi';
+import {
+  ISubtopic,
+  AdminSubtopicsProps,
+  SubtopicForm,
+} from './Subtopics.interfaces';
+import { addSubtopic, deleteSubtopic } from '../api/subtopics';
+import { useParams } from 'react-router-dom';
 
-const TopicsAdmin = (props: AdminTopicsProps) => {
+const SubtopicsAdmin = (props: AdminSubtopicsProps) => {
   const queryClient = useQueryClient();
+  const { topicId } = useParams();
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<ITopic>();
+  } = useForm<ISubtopic>();
   // Add
-  const addMutation = useMutation(addTopic, {
+  const addMutation = useMutation(addSubtopic, {
     onSuccess: async (newTopic) => {
-      queryClient.setQueryData<Array<ITopic> | undefined>(['topics'], (old) => [
-        newTopic,
-        ...(old as Array<ITopic>),
-      ]);
+      queryClient.setQueryData<Array<ISubtopic> | undefined>(
+        ['subtopics'],
+        (old) => [newTopic, ...(old as Array<ISubtopic>)]
+      );
     },
   });
   // Update
@@ -37,19 +43,25 @@ const TopicsAdmin = (props: AdminTopicsProps) => {
   //     ]);
   //   },
   // });
+
   // Delete
-  const deleteMutation = useMutation(deleteTopic, {
+  const deleteMutation = useMutation(deleteSubtopic, {
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: ['topics'],
+        queryKey: ['subtopics'],
         exact: true,
         refetchType: 'active',
       });
     },
   });
 
-  const onSubmit: SubmitHandler<ITopic> = async (data) =>
-    await addMutation.mutate(data);
+  const onSubmit = async (subtopic: SubtopicForm) => {
+    if (topicId) {
+      addMutation.mutate({ subtopic, topicId: Number(topicId) });
+    } else {
+      throw new Response('Erro interno', { status: 500 });
+    }
+  };
 
   const handleDelete = async (topicId: number) => {
     if (window.confirm('Tem certeza de que quer remover este item?')) {
@@ -65,10 +77,10 @@ const TopicsAdmin = (props: AdminTopicsProps) => {
           <TextInput
             type='text'
             id='topic_name'
-            {...register('topic_name', { required: true, maxLength: 64 })}
-            aria-invalid={errors.topic_name ? 'true' : 'false'}
+            {...register('subtopic_name', { required: true, maxLength: 64 })}
+            aria-invalid={errors.subtopic_name ? 'true' : 'false'}
           />
-          {errors.topic_name?.type === 'required' && (
+          {errors.subtopic_name?.type === 'required' && (
             <RequiredAlert role='alert'>Nome é obrigatório</RequiredAlert>
           )}
 
@@ -90,13 +102,13 @@ const TopicsAdmin = (props: AdminTopicsProps) => {
       </AdminContainer>
       {/* Topics list */}
       <CenteredContainer>
-        <List title='Tópicos'>
-          {props.topics.map((topic: ITopic) => (
+        <List title='Subtópicos'>
+          {props.subtopics.map((subtopic: ISubtopic) => (
             <Card
-              key={topic.topic_id}
-              title={topic.topic_name}
-              description={topic.description}
-              link={`${topic.topic_id}/subtopics`}
+              key={subtopic.subtopic_id}
+              title={subtopic.subtopic_name}
+              description={subtopic.description}
+              link={`${subtopic.subtopic_id}/posts`}
             >
               <ItemsCardButtons>
                 <StyledItemsCardButton>
@@ -104,7 +116,7 @@ const TopicsAdmin = (props: AdminTopicsProps) => {
                 </StyledItemsCardButton>
 
                 <StyledItemsCardButton
-                  onClick={() => handleDelete(topic.topic_id)}
+                  onClick={() => handleDelete(subtopic.subtopic_id)}
                 >
                   <HiOutlineTrash size={20} />
                 </StyledItemsCardButton>
@@ -118,5 +130,5 @@ const TopicsAdmin = (props: AdminTopicsProps) => {
   );
 };
 
-export default TopicsAdmin;
+export default SubtopicsAdmin;
 

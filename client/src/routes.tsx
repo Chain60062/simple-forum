@@ -3,11 +3,11 @@ import Subtopics from './subtopics/Subtopics';
 import Profile from './profile/Profile';
 import LoginPage from './login/Login';
 import SignupPage from './signup/Signup';
-import Navigation from './common/Navigation';
+import Navigation from './components/Navigation';
 import Topics from './topics/Topics';
 import Posts from './posts/Posts';
 import Replies from './replies/Replies';
-import { userExists } from './util/api';
+import { userExists } from './api/users';
 
 const routes = [
   {
@@ -30,7 +30,7 @@ const routes = [
       {
         path: ':username',
         element: <Profile />,
-        loader: userExists,//checar se perfil de usuario existe
+        loader: userExists, //checar se perfil de usuario existe
       },
       {
         path: 'login',

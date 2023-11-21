@@ -23,7 +23,7 @@ app.use(express.static('public'));
 // session
 app.use(
   session({
-    name: 'simpleforumid',
+    name: 'SIMPLEFORUMID',
     secret,
     resave: false,
     saveUninitialized: false,

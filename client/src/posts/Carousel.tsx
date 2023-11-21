@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { SERVER_URL } from '../util/config';
 import { StyledLink } from '../styles/Router';
-import { PostImageCarouselProps } from './Posts.types';
+import { PostImageCarouselProps } from './Posts.interfaces';
 import { HiOutlineChevronLeft, HiOutlineChevronRight } from 'react-icons/hi';
 import styled from 'styled-components';
 
@@ -39,7 +39,6 @@ function Carousel({ images, link }: PostImageCarouselProps) {
       >
         <HiOutlineChevronRight color='white' />
       </StyledControlButtonNext>
-      <div>{currentSlideIndex}</div>
     </StyledCarouselContainer>
   );
 }

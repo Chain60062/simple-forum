@@ -10,3 +10,10 @@ export type SubtopicForm = {
 export type SubtopicProps = {
   topicId: string;
 }
+export interface AdminSubtopicsProps {
+  subtopics: Array<ISubtopic>;
+}
+export interface AddSubtopicParams {
+  subtopic: SubtopicForm;
+  topicId: number;
+}

@@ -1,7 +1,7 @@
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { getUser } from '../util/api';
+import { getUser } from '../api/users';
 import { UserContext } from '../context/UserContext';
 import { Avatar, Container, Options, Username } from './Profile.styles';
 import { SERVER_URL } from '../util/config';

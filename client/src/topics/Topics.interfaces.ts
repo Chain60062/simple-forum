@@ -10,3 +10,7 @@ export interface TopicForm {
 export interface AdminTopicsProps{
   topics: Array<ITopic>
 }
+export interface EditTopicParams {
+  topic: TopicForm;
+  topicId: number;
+}

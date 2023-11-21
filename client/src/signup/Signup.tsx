@@ -11,8 +11,8 @@ import {
   RequiredAlert,
 } from '../styles/Forms';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { addUser } from '../util/api';
-import { UserForm } from './Signup.types';
+import { addUser } from '../api/users';
+import { UserForm } from './Signup.interfaces';
 
 const SignupPage = () => {
   const {

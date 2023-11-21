@@ -27,17 +27,23 @@ export const SidebarLink = styled(Link)`
 `;
 
 export const PostCard = styled.section`
+  display: grid;
+  justify-content: center;
+  flex-wrap: wrap;
   color: black;
   background-color: white;
   margin: 12px auto 12px auto;
-  width: 60%;
+  width: 50%;
   overflow: hidden;
   padding: 12px;
   border-radius: 12px;
   box-shadow: 2px 2px 6px 0 rgba(0, 0, 0, 0.3);
 
-  @media (max-width: 900px) {
-    width: 90%;
+  @media (max-width: 1450px) {
+    width: 60%;
+  }
+  @media (max-width: 1000px) {
+    width: 95%;
   }
 `;
 
@@ -79,7 +85,7 @@ export const FileInput = styled.input`
 export const AddPostContainer = styled.div`
   position: relative;
   box-shadow: 2px 2px 6px 0 rgba(0, 0, 0, 0.3);
-  width: 60%;
+  width: 50%;
   margin: 12px auto;
   border-radius: 12px;
   background-color: #1d3869;
