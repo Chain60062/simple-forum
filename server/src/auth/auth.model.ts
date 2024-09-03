@@ -15,9 +15,7 @@ export const login = async (
   if (user.rows.length == 0) return res.status(401).json('Usuário não encontrado.');
 
   await argon2
-    .verify(user.rows[0].cipher, password, {
-      parallelism: 2,
-    })
+    .verify(user.rows[0].cipher, password)
     .then((match) => {
       if (match) {
         // remover senha da session

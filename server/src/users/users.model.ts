@@ -7,7 +7,7 @@ import { UserRequestObject } from './users.interfaces.js';
 import logger from '../utils/logger.js';
 
 const ADMIN_EMAIL = process.env.ADMIN_USER_EMAIL || 'admin@myadminemail.xyz';
-const ADMIN_PASSWORD = process.env.ADMIN_USER_PASSWORD || 'AdminUserPassword123';
+const ADMIN_PASSWORD = process.env.ADMIN_USER_PASSWORD || 'admin123';
 
 export const createAdminAccount = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -18,9 +18,7 @@ export const createAdminAccount = async (req: Request, res: Response, next: Next
     const userSqlQuery =
       'INSERT INTO user_account(user_name, user_role, email, cipher, email_is_verified) VALUES($1, $2, $3, $4, $5)';
 
-    const cipher = await argon2.hash(ADMIN_PASSWORD, {
-      parallelism: 2,
-    });
+    const cipher = await argon2.hash(ADMIN_PASSWORD);
 
     pool.query(userSqlQuery, ['admin', 'admin', ADMIN_EMAIL, cipher, true]);
 
@@ -46,9 +44,7 @@ export const createUser = async (
     }
     const { user_name, profile_name, password, email } = req.body;
     const avatar = req.file;
-    const cipher = await argon2.hash(password, {
-      parallelism: 2,
-    });
+    const cipher = await argon2.hash(password);
     // Transaction
     await client.query('BEGIN');
     // profile creation
@@ -57,8 +53,8 @@ export const createUser = async (
     logger.info("PROFILE ROWS" + profile_id.rows[0].profile_id)
     // user_account creation
     const userSqlQuery =
-    'INSERT INTO user_account(user_name, user_role, profile_id, email, cipher, email_is_verified) VALUES($1, $2, $3, $4, $5, $6)';
-    await client.query(userSqlQuery, [user_name, 'user', profile_id.rows[0].profile_id,email, cipher, false]);
+      'INSERT INTO user_account(user_name, user_role, profile_id, email, cipher, email_is_verified) VALUES($1, $2, $3, $4, $5, $6)';
+    await client.query(userSqlQuery, [user_name, 'user', profile_id.rows[0].profile_id, email, cipher, false]);
 
     await client.query('COMMIT');
     return res.status(200).json('Usuário criado com sucesso');
@@ -83,14 +79,13 @@ export const editUser = async (req: Request, res: Response, next: NextFunction) 
     if (typeof avatar === 'undefined')
       return res.status(400).json('Falha ao enviar imagem de usuário, tente novamente.');
 
-    const cipher = await argon2.hash(password, {
-      parallelism: 2,
-    });
+    const cipher = await argon2.hash(password);
     // Transaction
     await client.query('BEGIN');
 
     const userUpdateSqlQuery =
-      'UPDATE user_account SET user_name = $1, user_role = $2, email = $3, cipher = $4, email_is_verified = $5 WHERE user_id = $6 RETURNING *';
+      `UPDATE user_account SET user_name = $1, user_role = $2, email = $3, cipher = $4, email_is_verified = $5 
+      WHERE user_id = $6 RETURNING *`;
     const userUpdate = await client.query(userUpdateSqlQuery, [
       user_name,
       'user',
@@ -147,10 +142,13 @@ export const deleteUser = async (req: Request, res: Response, next: NextFunction
 export const getUserByUsername = async (req: Request, res: Response, next: NextFunction) => {
   const username = req.params.username;
   try {
-    const user = await pool.query('SELECT * FROM user_account u LEFT JOIN profile p ON u.profile_id = p.profile_id WHERE p.profile_name  = $1', [username]);
+    const user = await pool.query(`SELECT * FROM user_account u 
+      LEFT JOIN profile p ON u.profile_id = p.profile_id 
+      WHERE p.profile_name = $1`,
+      [username]);
 
-    if(user.rows.length === 0) return res.sendStatus(404);
-    
+    if (user.rows.length === 0) return res.sendStatus(404);
+
     res.status(200).json(user.rows[0]);
   } catch (err) {
     next(err);

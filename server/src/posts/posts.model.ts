@@ -1,8 +1,10 @@
 import { NextFunction, Response, Request } from 'express';
-import pool from '../db/db.js';
+import pool, { getClient } from '../db/db.js';
 import { ICreatePost } from './posts.interfaces.js';
-import { unlink } from 'fs';
+import { unlink } from 'node:fs/promises';
 import path from 'path';
+import logger from 'src/utils/logger.js';
+import { QueryResult } from 'pg';
 
 export const addReply = async (
   req: Request<{ subtopicId: string }, object, ICreatePost>,
@@ -51,7 +53,7 @@ async function createPost(
     res.status(200).json(post.rows[0]);
   } catch (err) {
     next(err);
-  }finally{
+  } finally {
     client.release();
   }
 }
@@ -61,28 +63,58 @@ export const deletePost = async (
   res: Response,
   next: NextFunction,
 ) => {
+  const postId = req.params.postId
+  const userId = req.session.user?.user_id
+  const client = await getClient()
   try {
-    const postId = req.params.postId;
-    const userId = req.session.user?.user_id;
-    const files = await pool.query('SELECT file_path FROM file WHERE post_id = $1', [postId]);
+    await client.query('BEGIN')
+    if (typeof userId === 'undefined')
+      return res.status(401).json('Você não está autorizado a apagar este post')
 
-    if (typeof files == 'undefined' || files.rowCount === 0)
-      return res.status(404).json('Post não encontrado');
-    await pool
-      .query('DELETE FROM post WHERE post_id = $1 AND user_id = $2', [postId, userId])
-      .then(() => {
-        for (const file of files.rows) {
-          unlink(`${file.file_path}`, (err) => {
-            if (err) next(err);
-          });
-        }
-        res.status(200).json('Post apagado com sucesso');
-      })
-      .catch(next);
+    const files = await removePostFilesFromDatabase(postId, userId)
+
+    if (files === null)
+      return res.status(404).json('Post não encontrado')
+
+    if (await removePostFilesFromDrive(files))
+      return res.status(500).json('Erro interno ao apagar imagens, tente novamente mais tarde.')
+
+    await client.query('COMMIT')
+
+    res.status(200).json('Post apagado com sucesso')
   } catch (err) {
-    next(err);
+    logger.error(`Erro ao apagar imagens de um post.`)
+    await client.query('ROLLBACK')
+    next(err)
+  } finally {
+    client.release()
+  }
+
+  async function removePostFilesFromDrive(files: QueryResult<any>) {
+    const fileRemovalPromises = []
+
+    for (const file of files.rows) {
+      fileRemovalPromises.push(unlink(`${file.file_path}`).catch(() => {
+        logger.error(`Erro ao apagar imagem ${file.file_path}`)
+        return false
+      }))
+    }
+
+    await Promise.all(fileRemovalPromises)
+    return true
+  }
+
+  async function removePostFilesFromDatabase(postId: string, userId: string) {
+    const files = await client.query('SELECT file_path FROM file WHERE post_id = $1', [postId])
+    if (typeof files == 'undefined' || files.rowCount === 0)
+      return null
+
+    await pool.query('DELETE FROM post WHERE post_id = $1 AND user_id = $2', [postId, userId])
+
+    return files
   }
 };
+
 export const editPost = async (
   req: Request<{ postId: string }, object, { message: string; subtopic: string }>,
   res: Response,
