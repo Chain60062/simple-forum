@@ -9,12 +9,12 @@ import logger from './utils/logger.js';
 const port = process.env.PORT || 8081;
 const secret = process.env.SECRET || 'supersecretkey';
 const app = express();
-
+const CLIENT_URL = process.env.CLIENT_URL || 'http://localhost:5173'
 // cors
 app.use(
   cors({
     credentials: true,
-    origin: 'http://localhost:5173',
+    origin: CLIENT_URL,
   }),
 );
 // static directory

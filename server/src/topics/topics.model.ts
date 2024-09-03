@@ -29,10 +29,10 @@ export const deleteTopic = async (
     const deletedTopic = await pool.query(sqlQuery, [topicId]);
 
     if(deletedTopic.rowCount !== 1){
-      return res.status(400).json('Não foi possível deletar o tópico.');
+      return res.status(400).json('Não foi possível remover o tópico.');
     }
 
-    return res.status(200).json('Tópico deletado com sucesso.');
+    return res.status(200).json('Tópico removido com sucesso.');
   } catch (err) {
     next(err);
   }

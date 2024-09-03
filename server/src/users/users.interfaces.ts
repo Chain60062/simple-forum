@@ -5,6 +5,7 @@ export interface UserRequestObject {
   email: string;
   avatar: Express.Multer.File
 }
+
 export interface User {
   user_id: string;
   profile_id: string;

@@ -6,6 +6,26 @@ import path from 'path';
 import logger from 'src/utils/logger.js';
 import { QueryResult } from 'pg';
 
+const POSTS_BY_SUBTOPIC_QUERY = `SELECT
+p.post_id, profile_name, message,
+array_to_json(array_agg(file_path)) AS files,
+title, p.created_at
+FROM post p
+LEFT JOIN file f on p.post_id = f.post_id 
+JOIN user_account u on p.user_id = u.user_id 
+JOIN profile pf on u.profile_id = pf.profile_id 
+WHERE subtopic_id = $1 
+GROUP BY p.post_id, pf.profile_name 
+ORDER BY created_at desc`
+
+const POSTS_BY_USER_QUERY = `SELECT p.post_id, profile_id, message, 
+array_to_json(array_agg(file_path)), title, created_at as files, created_at 
+FROM post p 
+LEFT JOIN file f ON p.post_id = f.post_id 
+WHERE p.profile_id = $1 
+GROUP BY p.post_id 
+ORDER BY created_at DESC`
+
 export const addReply = async (
   req: Request<{ subtopicId: string }, object, ICreatePost>,
   res: Response,
@@ -115,6 +135,7 @@ export const deletePost = async (
   }
 };
 
+const EDIT_POST_QUERY = 'UPDATE post SET message = $1, subtopic_id = $2 WHERE post_id = $3 and profile_id = $4';
 export const editPost = async (
   req: Request<{ postId: string }, object, { message: string; subtopic: string }>,
   res: Response,
@@ -123,16 +144,14 @@ export const editPost = async (
   try {
     const { message, subtopic } = req.body;
     const postId = req.params.postId;
-    const userId = req.session.user?.profile_id;
+    const profileId = req.session.user?.profile_id;
     const subtopicId = await pool.query(
       'SELECT subtopic_id FROM subtopic WHERE subtopic_name = $1',
       [subtopic],
     );
     // const files = await pool.query('SELECT file_path FROM file WHERE post_id = $1', [postId]);
-    const sqlQuery =
-      'UPDATE post SET message = $1, subtopic_id = $2 WHERE post_id = $3 and profile_id = $4';
 
-    const post = await pool.query(sqlQuery, [message, subtopicId, postId, userId]);
+    const post = await pool.query(EDIT_POST_QUERY, [message, subtopicId, postId, profileId]);
 
     res.status(200).json(post.rows[0]);
   } catch (err) {
@@ -148,28 +167,7 @@ export const listPostsBySubtopic = async (
   try {
     const subtopicId = req.params.subtopicId;
 
-    const posts = await pool.query(
-      `select
-        p.post_id,
-        profile_name,
-        message,
-        array_to_json(array_agg(file_path)) as files,
-        title,
-        p.created_at
-      from
-        post p
-      left join file f on p.post_id = f.post_id
-      join user_account u on p.user_id = u.user_id 
-      join profile pf on u.profile_id = pf.profile_id
-      where
-        subtopic_id = $1
-      group by
-        p.post_id,
-        pf.profile_name
-      order by
-      created_at desc`,
-      [subtopicId],
-    );
+    const posts = await pool.query(POSTS_BY_SUBTOPIC_QUERY, [subtopicId]);
     res.status(200).json(posts.rows);
   } catch (err) {
     next(err);
@@ -181,11 +179,9 @@ export const listPostsByUser = async (
   next: NextFunction,
 ) => {
   try {
-    const userId = req.params.userId; //pega profile_id e os posts associados
-    const posts = await pool.query(
-      'SELECT p.post_id, profile_id, message, array_to_json(array_agg(file_path)), title, created_at as files, created_at FROM post p LEFT JOIN file f ON p.post_id = f.post_id WHERE p.profile_id = $1 GROUP BY p.post_id ORDER BY created_at DESC',
-      [userId],
-    );
+    const userId = req.params.userId;
+    const posts = await pool.query(POSTS_BY_USER_QUERY, [userId]);
+
     res.status(200).json(posts.rows);
   } catch (err) {
     next(err);
