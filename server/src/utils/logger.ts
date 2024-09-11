@@ -1,12 +1,12 @@
-import pino from 'pino';
+import pino from 'pino'
 
 const logger = pino({
-  transport: {
-    target: 'pino-pretty',
-    options: {
-        translateTime: "SYS:dd-mm-yyyy HH:MM:ss",
-    }
-  },
-});
+	transport: {
+		target: 'pino-pretty',
+		options: {
+			translateTime: 'SYS:dd-mm-yyyy HH:MM:ss',
+		},
+	},
+})
 
-export default logger;
+export default logger

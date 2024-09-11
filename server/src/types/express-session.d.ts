@@ -1,8 +1,7 @@
-import { User } from "../users/users.interfaces";
+import type { User } from '../users/users.interfaces'
 
 declare module 'express-session' {
-  interface SessionData {
-    user?: User;
-  }
+	interface SessionData {
+		user?: User
+	}
 }
-

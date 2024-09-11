@@ -1,0 +1,12 @@
+{
+	"properties": {
+		"user_name": {
+			"type": "string"
+		},
+		"profile_name": {
+			"type": "string"
+		},
+		"password": { "type": "string" },
+		"email": { "type": "string", "format": "email" }
+	}
+}
