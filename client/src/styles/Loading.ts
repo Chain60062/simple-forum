@@ -1,9 +1,9 @@
-import styled, { keyframes } from 'styled-components';
+import styled, { keyframes } from 'styled-components'
 
 const spin = keyframes`
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
-`;
+`
 const Loading = styled.div`
   position: absolute;
   z-index: 1;
@@ -16,6 +16,5 @@ const Loading = styled.div`
   border-radius: 50%;
   border-top: 12px solid $primary;
   animation: ${spin} 2s linear infinite;
-`;
-export default Loading;
-
+`
+export default Loading

@@ -20,6 +20,8 @@ npm run dev
 In the server/config/db folder there is a sql file, just run the script and make sure you got the most recent Postgresql version.
 
 ## Server
+Before you run the server, make sure you create a .env file in the root directory, it should contain a single property called DATABASE_URI.
+Use the `.env.example` model as a guide and copy it to `.env`.
 The server dependencies should also be installed with `npm install`. To run a development server locally run:
 Again, to run it use:
 ```

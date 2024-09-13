@@ -1,20 +1,20 @@
-import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom'
+import styled from 'styled-components'
 interface INavLinkProps {
-  collapsed?: boolean;
+	collapsed?: boolean
 }
 
 export const TopNavBody = styled.div`
   background-color: #223697;
   height: 54px;
   grid-area: topnav;
-`;
+`
 
 export const NavLink = styled(Link)<INavLinkProps>`
   float: left;
   color: white;
   border-radius: 6px;
-  margin: 8px;
+  margin: 8px 4px;
   padding: 8px 14px;
   text-align: center;
   text-decoration: none;
@@ -31,18 +31,19 @@ export const NavLink = styled(Link)<INavLinkProps>`
     background-color: #4e5eab;
     color: white;
   }
-`;
+`
 
 export const LogoutNavLink = styled.a`
   color: white;
   border-radius: 6px;
-  margin: 8px;
-  padding: 8px 14px;
+  margin: 8px 2px;
+  padding: 8px 12px;
   text-align: center;
   text-decoration: none;
   font-size: 18px;
   transition: background-color .3s;
-
+  cursor: pointer;
+  
   &:not(:first-child) {
     @media (max-width: 900px) {
       display: none;
@@ -53,7 +54,7 @@ export const LogoutNavLink = styled.a`
     background-color: #4e5eab;
     color: white;
   }
-`;
+`
 
 export const TopNavIcon = styled.a<INavLinkProps>`
   color: white;
@@ -65,15 +66,12 @@ export const TopNavIcon = styled.a<INavLinkProps>`
   }
 
   ${({ collapsed }: { collapsed?: boolean }) =>
-    collapsed &&
-    `
+		collapsed &&
+		`
     @media (max-width: 900px) {
       position: absolute;
       right: 0;
       top: 0;
     }
   `}
-`;
-
-
-
+`

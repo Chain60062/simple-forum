@@ -1,5 +1,5 @@
-import styled from 'styled-components';
-import { StyledLink } from './Router';
+import styled from 'styled-components'
+import { StyledLink } from './Router'
 
 export const CenteredContainer = styled.div`
   display: flex;
@@ -7,7 +7,7 @@ export const CenteredContainer = styled.div`
   align-items: flex-start;
   margin-top: 54px;
   height: calc(100vh - 108px); //margin + navbar height
-`;
+`
 
 // Container
 export const ItemsBox = styled.div`
@@ -25,7 +25,7 @@ export const ItemsBox = styled.div`
   @media (max-width: 1300px) {
     max-width: 80vw;
   }
-`;
+`
 
 export const ItemsTitle = styled.h1`
   width: 100%;
@@ -37,7 +37,7 @@ export const ItemsTitle = styled.h1`
   background-color: #152a4d;
   padding: 14px;
   border-radius: 12px;
-`;
+`
 
 // Topic or Subtopic Card
 export const ItemsCard = styled.div`
@@ -59,25 +59,25 @@ export const ItemsCard = styled.div`
   @media (max-width: 720px) {
     flex-basis: 100%; /* Single card per row on smaller screens */
   }
-`;
+`
 export const ItemsCardButtons = styled.div`
 display: flex;
 justify-content: flex-end;
-`;
+`
 // Topic or Subtopic icon
 export const ItemsCardIcon = styled.img`
   height: 80%;
   width: 80%;
   background-color: white;
-`;
+`
 
 export const ItemsCardTitle = styled.div`
   font-size: 24px;
-`;
+`
 export const ItemsCardDescription = styled.div`
   font-size: 12px;
   margin-top: $xs;
-`;
+`
 
 export const StyledItemsCardButton = styled.a`
   display: flex;
@@ -89,4 +89,4 @@ export const StyledItemsCardButton = styled.a`
     color: #1e6c57;
     background-color: #1a4f40;
   }
-`;
+`

@@ -1,5 +1,5 @@
-import { Link } from 'react-router-dom';
-import { styled } from 'styled-components';
+import { Link } from 'react-router-dom'
+import { styled } from 'styled-components'
 
 export const StyledLink = styled(Link)`
   margin: 0px;
@@ -8,5 +8,4 @@ export const StyledLink = styled(Link)`
   &:hover {
     cursor: pointer;
   }
-`;
-
+`

@@ -1,5 +1,5 @@
-import styled from 'styled-components';
-import { Form } from 'react-router-dom';
+import { Form } from 'react-router-dom'
+import styled from 'styled-components'
 
 export const Container = styled.div`
   width: 50vw;
@@ -13,7 +13,7 @@ export const Container = styled.div`
   background: white;
   border-radius: 12px;
   box-shadow: 2px 2px 6px 0 rgba(0, 0, 0, 0.3);
-`;
+`
 
 export const StyledGridForm = styled(Form)`
   padding: 30px;
@@ -23,16 +23,16 @@ export const StyledGridForm = styled(Form)`
   @media (max-width: 900px) {
     grid-template-columns: auto;
   }
-`;
+`
 
 export const StyledForm = styled(Form)`
   padding: 30px;
-`;
+`
 
 export const Row = styled.div`
   height: 45px;
   margin-bottom: 15px;
-`;
+`
 
 export const Title = styled.h1`
   height: 70px;
@@ -47,7 +47,7 @@ export const Title = styled.h1`
   align-items: center;
   display: flex;
   justify-content: center;
-`;
+`
 
 export const InputIcon = styled.i`
   position: absolute;
@@ -60,7 +60,7 @@ export const InputIcon = styled.i`
   align-items: center;
   justify-content: center;
   font-size: 18px;
-`;
+`
 export const Input = styled.input`
   height: 46px;
   width: 100%;
@@ -75,7 +75,7 @@ export const Input = styled.input`
   &:focus {
     box-shadow: inset 0px 0px 2px 2px rgba(34, 54, 151, 0.5);
   }
-`;
+`
 
 export const SubmitButton = styled.button`
   color: white;
@@ -85,7 +85,7 @@ export const SubmitButton = styled.button`
   border: 1px solid white;
   border-radius: 12px;
   margin: auto;
-`;
+`
 
 export const Alert = styled.div`
   position: absolute;
@@ -98,12 +98,12 @@ export const Alert = styled.div`
   padding-left: 24px;
   padding-right: 24px;
   border-radius: 12px;
-`;
+`
 
 export const AlertText = styled.h4`
   color: white;
   vertical-align: bottom;
-`;
+`
 
 export const AddForm = styled(Form)`
   padding: 12px;
@@ -112,7 +112,7 @@ export const AddForm = styled(Form)`
   &:focus {
     box-shadow: inset 0px 0px 2px 2px rgba(26, 188, 156, 0.25);
   }
-`;
+`
 
 export const TextInput = styled.input`
   display: block;
@@ -124,13 +124,13 @@ export const TextInput = styled.input`
   &:focus {
     outline: none;
   }
-`;
+`
 
 export const FormFooter = styled.div`
   width: 100%;
   height: 36px;
   margin-top: 12px;
-`;
+`
 export const Submit = styled.button`
   position: absolute;
   bottom: 0;
@@ -144,7 +144,7 @@ export const Submit = styled.button`
   outline: none;
   background-color: #0f362b;
   color: #349e81;
-`;
+`
 
 export const AdminContainer = styled.div`
   position: relative;
@@ -156,15 +156,14 @@ export const AdminContainer = styled.div`
   font-size: 14px;
   box-shadow: 2px 2px 6px 0 rgba(0, 0, 0, 0.3);
   background-color: #349e81;
-`;
+`
 export const RequiredAlert = styled.p`
   color: #fa0707;
   font-weight: bold;
   font-size: 16px;
-`;
+`
 
 export const AdminLabel = styled.label`
   color: #0f362b;
   font-size: 18px;
-`;
-
+`

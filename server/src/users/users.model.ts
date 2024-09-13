@@ -6,7 +6,8 @@ import logger from '../utils/logger.js'
 import ajv from '../utils/validation.js'
 import type { RegisterUser, UserRequestObject } from './users.interfaces.js'
 
-const ADMIN_EMAIL = process.env.ADMIN_USER_EMAIL || 'admin@fakemail.xyz'
+//admin@fakemail.xyz
+const ADMIN_EMAIL = process.env.ADMIN_USER_EMAIL || 'admin@simpleforum.com'
 const ADMIN_PASSWORD = process.env.ADMIN_USER_PASSWORD || 'admin123'
 
 const ADD_ADMIN_QUERY = `INSERT INTO user_account(user_name, user_role, email, cipher, email_is_verified)
@@ -54,6 +55,7 @@ export const createUser = async (
 		if (typeof validate !== 'undefined') {
 			if (validate(req.body)) {
 				const { user_name, profile_name, password, email } = req.body
+				logger.info(`${user_name} ${profile_name} ${password} ${email}`)
 				const avatar = req.file
 				const cipher = await argon2.hash(password)
 
@@ -82,7 +84,7 @@ export const createUser = async (
 				.status(500)
 				.json('Erro inesperado ao obter corpo da requisição')
 
-		return res.status(200).json('Usuário criado com sucesso')
+		return res.status(201).json('Usuário criado com sucesso')
 	} catch (err) {
 		await client.query('ROLLBACK')
 		next(err)
