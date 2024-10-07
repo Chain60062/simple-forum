@@ -1,4 +1,4 @@
-export interface ITopic {
+export interface Topic {
 	topic_id: number
 	topic_name: string
 	description: string
@@ -8,7 +8,7 @@ export interface TopicForm {
 	description: string
 }
 export interface AdminTopicsProps {
-	topics: Array<ITopic>
+	topics: Array<Topic>
 }
 export interface EditTopicParams {
 	topic: TopicForm

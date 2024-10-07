@@ -1,7 +1,7 @@
-import type { EditTopicParams, ITopic } from '../topics/Topics.interfaces'
+import type { EditTopicParams, Topic } from '../pages/topics/Topics.interfaces'
 import { SERVER_URL } from '../util/config'
 
-export const addTopic = async (data: ITopic) => {
+export const addTopic = async (data: Topic) => {
 	const res = await fetch(`${SERVER_URL}/topics`, {
 		method: 'POST',
 		mode: 'cors',
@@ -58,10 +58,6 @@ export const updateTopic = async ({ topic, topicId }: EditTopicParams) => {
 		},
 		body: JSON.stringify(topic),
 	})
-
-	if (!res?.ok) {
-		throw new Error('Erro inesperado na requisição.')
-	}
 
 	return res.json()
 }

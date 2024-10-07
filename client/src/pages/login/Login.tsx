@@ -2,6 +2,7 @@ import { useMutation } from '@tanstack/react-query'
 import { type SubmitHandler, useForm } from 'react-hook-form'
 import { HiIdentification, HiOutlineLockClosed } from 'react-icons/hi'
 import { Navigate } from 'react-router-dom'
+import { toast } from 'sonner'
 import { login } from '../../api/auth'
 import { useUser } from '../../hooks/useUser'
 import {
@@ -15,7 +16,6 @@ import {
 	Title,
 } from '../../styles/Forms'
 import type { LoginForm } from './Login.types'
-import { toast } from 'sonner'
 
 const LoginPage = () => {
 	const user = useUser()
@@ -28,7 +28,7 @@ const LoginPage = () => {
 
 	const { mutate, isSuccess, data } = useMutation({
 		mutationFn: login,
-		onSuccess: async(data) => {
+		onSuccess: async (data) => {
 			if (data.status === 401) {
 				toast.error(await data.json())
 				reset()

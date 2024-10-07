@@ -7,7 +7,7 @@ import { GlobalStyle } from './App.styles'
 import ErrorComponent from './pages/error/Error'
 import ErrorBoundary from './pages/error/ErrorBoundary'
 import routes from './routes.jsx'
-import Loading from './styles/Loading'
+import { Loading } from './styles/Loading'
 const queryClient = new QueryClient()
 const router = createBrowserRouter(routes)
 
@@ -23,7 +23,7 @@ const App = () => {
 						position="top-center"
 						toastOptions={{
 							style: {
-								padding: '14px',
+								padding: '1rem',
 							},
 						}}
 					/>

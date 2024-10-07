@@ -2,15 +2,15 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { type SubmitHandler, useForm } from 'react-hook-form'
 import { HiOutlinePencilAlt, HiOutlineTrash } from 'react-icons/hi'
 import { addTopic, deleteTopic } from '../../api/topics'
-import List, { ItemCard as Card } from '../../components/Lists'
+import SubtopicList, { TopicCard as SubtopicCard } from '../../components/TopicList/TopicList'
 import { AdminContainer, AdminLabel, RequiredAlert } from '../../styles/Forms'
 import { AddForm, FormFooter, Submit, TextInput } from '../../styles/Forms'
 import {
 	CenteredContainer,
 	ItemsCardButtons,
 	StyledItemsCardButton,
-} from '../../styles/Lists'
-import type { AdminTopicsProps, ITopic } from './Topics.interfaces'
+} from '../../components/TopicList/TopicList.styles'
+import type { AdminTopicsProps, Topic } from './Topics.interfaces'
 
 const TopicsAdmin = (props: AdminTopicsProps) => {
 	const queryClient = useQueryClient()
@@ -18,23 +18,23 @@ const TopicsAdmin = (props: AdminTopicsProps) => {
 		register,
 		handleSubmit,
 		formState: { errors },
-	} = useForm<ITopic>()
+	} = useForm<Topic>()
 	// Add
 	const addMutation = useMutation({
 		mutationFn: addTopic,
 		onSuccess: async (newTopic) => {
-			queryClient.setQueryData<Array<ITopic> | undefined>(['topics'], (old) => [
+			queryClient.setQueryData<Array<Topic> | undefined>(['topics'], (old) => [
 				newTopic,
-				...(old as Array<ITopic>),
+				...(old as Array<Topic>),
 			])
 		},
 	})
 	// Update
 	// const updateMutation = useMutation(updateTopic, {
 	//   onSuccess: async (newTopic) => {
-	//     queryClient.setQueryData<Array<ITopic> | undefined>(['topics'], (old) => [
+	//     queryClient.setQueryData<Array<Topic> | undefined>(['topics'], (old) => [
 	//       newTopic,
-	//       ...(old as Array<ITopic>),
+	//       ...(old as Array<Topic>),
 	//     ]);
 	//   },
 	// });
@@ -50,7 +50,7 @@ const TopicsAdmin = (props: AdminTopicsProps) => {
 		},
 	})
 
-	const onSubmit: SubmitHandler<ITopic> = async (data) =>
+	const onSubmit: SubmitHandler<Topic> = async (data) =>
 		await addMutation.mutate(data)
 
 	const handleDelete = async (topicId: number) => {
@@ -92,9 +92,9 @@ const TopicsAdmin = (props: AdminTopicsProps) => {
 			</AdminContainer>
 			{/* Topics list */}
 			<CenteredContainer>
-				<List title="Tópicos">
-					{props.topics.map((topic: ITopic) => (
-						<Card
+				<SubtopicList title="Tópicos">
+					{props.topics.map((topic: Topic) => (
+						<SubtopicCard
 							key={topic.topic_id}
 							title={topic.topic_name}
 							description={topic.description}
@@ -111,11 +111,10 @@ const TopicsAdmin = (props: AdminTopicsProps) => {
 									<HiOutlineTrash size={20} />
 								</StyledItemsCardButton>
 							</ItemsCardButtons>
-						</Card>
+						</SubtopicCard>
 					))}
-				</List>
+				</SubtopicList>
 			</CenteredContainer>
-			;
 		</>
 	)
 }

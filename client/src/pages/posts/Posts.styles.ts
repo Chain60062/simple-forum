@@ -90,3 +90,18 @@ export const AddPostContainer = styled.div`
   border-radius: 12px;
   background-color: #1d3869;
 `
+
+export const CreatePostButton = styled.button`
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 8rem;
+  padding: 12px 16px;
+  margin: 12px;
+  border-radius: 8px;
+  font-size: 16px;
+  border: none;
+  outline: none;
+  background-color: #0f362b;
+  color: #349e81;
+`;

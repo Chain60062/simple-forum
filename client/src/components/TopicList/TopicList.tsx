@@ -4,11 +4,11 @@ import {
 	ItemsCardDescription,
 	ItemsCardTitle,
 	ItemsTitle,
-} from '../styles/Lists'
-import { StyledLink } from '../styles/Router'
-import type { CardProps, ListProps } from './Lists.types'
+} from './TopicList.styles'
+import { StyledLink } from '../../styles/Router'
+import type { CardProps, ListProps } from './TopicList.types'
 
-const ItemsList = ({ children, title }: ListProps) => {
+const TopicList = ({ children, title }: ListProps) => {
 	return (
 		<ItemsBox>
 			<ItemsTitle>{title}</ItemsTitle>
@@ -17,7 +17,7 @@ const ItemsList = ({ children, title }: ListProps) => {
 	)
 }
 
-export const ItemCard = ({ children, description, link, title }: CardProps) => {
+export const TopicCard = ({ children, description, link, title }: CardProps) => {
 	return (
 		<ItemsCard>
 			<StyledLink to={link}>
@@ -29,4 +29,4 @@ export const ItemCard = ({ children, description, link, title }: CardProps) => {
 	)
 }
 
-export default ItemsList
+export default TopicList

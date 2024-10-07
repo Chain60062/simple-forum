@@ -6,19 +6,20 @@ interface INavLinkProps {
 
 export const TopNavBody = styled.div`
   background-color: #223697;
-  height: 54px;
+  height: 3rem;
   grid-area: topnav;
+  display: flex;
+  align-items: center;
+  justify-content: end;
 `
 
 export const NavLink = styled(Link)<INavLinkProps>`
-  float: left;
-  color: white;
-  border-radius: 6px;
-  margin: 8px 4px;
-  padding: 8px 14px;
-  text-align: center;
+  font-size: 1,125rem;
+  color: #ffffff;
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.6rem;
+  margin: 0.2rem;
   text-decoration: none;
-  font-size: 18px;
   transition: background-color .3s;
 
   &:not(:first-child) {
@@ -31,16 +32,16 @@ export const NavLink = styled(Link)<INavLinkProps>`
     background-color: #4e5eab;
     color: white;
   }
-`
+`;
 
 export const LogoutNavLink = styled.a`
   color: white;
-  border-radius: 6px;
-  margin: 8px 2px;
-  padding: 8px 12px;
+  border-radius: 0.5rem;
+  margin: 0.5rem 0.1rem;
+  padding: 0.5rem 0.8rem;
   text-align: center;
   text-decoration: none;
-  font-size: 18px;
+  font-size: 1,125rem;
   transition: background-color .3s;
   cursor: pointer;
   
@@ -54,7 +55,7 @@ export const LogoutNavLink = styled.a`
     background-color: #4e5eab;
     color: white;
   }
-`
+`;
 
 export const TopNavIcon = styled.a<INavLinkProps>`
   color: white;
