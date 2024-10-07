@@ -80,7 +80,7 @@ export default function Replies() {
 			if (e.currentTarget.textContent != null && reply_id != null) {
 				editReplyMutation.mutate({
 					data: { message: e.currentTarget.textContent },
-					replyId: reply_id,
+					replyId: Number.parseInt(reply_id),
 				});
 			}
 		}
@@ -94,7 +94,7 @@ export default function Replies() {
 		if (e.currentTarget.textContent != null && reply_id != null) {
 			editReplyMutation.mutate({
 				data: { message: e.currentTarget.textContent },
-				replyId: reply_id,
+				replyId: Number.parseInt(reply_id),
 			});
 		}
 	};

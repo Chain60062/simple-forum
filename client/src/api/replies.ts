@@ -1,7 +1,7 @@
 import type {
 	AddReplyParams,
 	EditReplyParams,
-} from '../replies/Replies.interfaces'
+} from '../pages/replies/Replies.interfaces'
 import { SERVER_URL } from '../util/config'
 
 export const addReply = async ({ data, postId }: AddReplyParams) => {

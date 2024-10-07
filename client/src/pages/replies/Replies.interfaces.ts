@@ -8,7 +8,7 @@ export interface Reply {
 	avatar: string
 	user_id: string
 }
-export type ReplyForm = {
+export interface ReplyForm  {
 	message: string
 }
 export interface AddReplyParams {

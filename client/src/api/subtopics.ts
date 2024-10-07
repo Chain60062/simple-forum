@@ -1,6 +1,5 @@
 import type {
 	AddSubtopicParams,
-	EditSubtopicParams,
 	SubtopicForm,
 } from '../pages/subtopics/Subtopics.interfaces'
 import { SERVER_URL } from '../util/config'
