@@ -176,7 +176,7 @@ export const deleteUser = async (
 		}
 		await pool.query('DELETE FROM profile WHERE profile_id = $1', [profileId])
 
-		res.status(200).json('Sua conta foi removida com sucesso')
+		return res.status(200).json('Sua conta foi removida com sucesso')
 	} catch (err) {
 		next(err)
 	}
@@ -198,7 +198,7 @@ export const getUserByUsername = async (
 
 		if (user.rows.length === 0) return res.sendStatus(404)
 
-		res.status(200).json(user.rows[0])
+		return res.status(200).json(user.rows[0])
 	} catch (err) {
 		next(err)
 	}

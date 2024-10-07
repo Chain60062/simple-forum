@@ -1,12 +1,12 @@
 import { useQuery } from '@tanstack/react-query'
 import { useParams } from 'react-router-dom'
 import { getSubtopics } from '../../api/subtopics'
-import List, { ItemCard as Card } from '../../components/Lists' //ItemsList as List, ItemCard
+import SubtopicList, { TopicCard as SubtopicCard } from '../../components/TopicList/TopicList'
 import { useUser } from '../../hooks/useUser'
-import { CenteredContainer } from '../../styles/Lists'
-import { MainLoader } from '../../styles/Loaders'
+import { CenteredContainer } from '../../components/TopicList/TopicList.styles'
+import { Loading } from '../../styles/Loading'
 import SubtopicsAdmin from './Subtopics.admin'
-import type { ISubtopic } from './Subtopics.interfaces'
+import type { Subtopic } from './Subtopics.interfaces'
 
 const Subtopics = () => {
 	const { topicId } = useParams()
@@ -17,7 +17,7 @@ const Subtopics = () => {
 	})
 
 	if (isLoading) {
-		return <MainLoader />
+		return <Loading />
 	}
 
 	if (error instanceof Error && isError) {
@@ -29,16 +29,16 @@ const Subtopics = () => {
 				<SubtopicsAdmin subtopics={data} />
 			) : (
 				<CenteredContainer>
-					<List title="Subtópicos">
-						{data.map((subtopic: ISubtopic) => (
-							<Card
+					<SubtopicList title="Subtópicos">
+						{data.map((subtopic: Subtopic) => (
+							<SubtopicCard
 								key={subtopic.subtopic_id}
 								title={subtopic.subtopic_name}
 								description={subtopic.description}
 								link={`${subtopic.subtopic_id}/posts`}
 							/>
 						))}
-					</List>
+					</SubtopicList>
 				</CenteredContainer>
 			)}
 		</>

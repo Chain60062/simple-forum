@@ -1,12 +1,12 @@
 import { useQuery } from '@tanstack/react-query'
 import { getTopics } from '../../api/topics'
-import List, { ItemCard as Card } from '../../components/Lists' //ItemsList as List, ItemCard
+import TopicList, { TopicCard } from '../../components/TopicList/TopicList'
 import { useUser } from '../../hooks/useUser'
-import { CenteredContainer } from '../../styles/Lists'
+import { CenteredContainer } from '../../components/TopicList/TopicList.styles'
 import ErrorComponent from '../error/Error'
 import { MainContent } from '../posts/Posts.styles'
 import TopicsAdmin from './Topics.admin'
-import type { ITopic } from './Topics.interfaces'
+import type { Topic } from './Topics.interfaces'
 
 const Topics = () => {
 	const user = useUser()
@@ -26,16 +26,16 @@ const Topics = () => {
 				<TopicsAdmin topics={data} />
 			) : (
 				<CenteredContainer>
-					<List title="Tópicos">
-						{data.map((topic: ITopic) => (
-							<Card
+					<TopicList title="Tópicos">
+						{data.map((topic: Topic) => (
+							<TopicCard
 								key={topic.topic_id}
 								title={topic.topic_name}
 								description={topic.description}
 								link={`${topic.topic_id}/subtopics`}
 							/>
 						))}
-					</List>
+					</TopicList>
 				</CenteredContainer>
 			)}
 		</>

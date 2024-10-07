@@ -2,20 +2,28 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { HiOutlinePencilAlt, HiOutlineTrash } from 'react-icons/hi'
 import { useParams } from 'react-router-dom'
-import { addSubtopic, deleteSubtopic } from '../../api/subtopics'
-import List, { ItemCard as Card } from '../../components/Lists'
+import {
+	addSubtopic,
+	deleteSubtopic,
+	updateSubtopic,
+} from '../../api/subtopics'
+import { updateTopic } from '../../api/topics'
+import SubtopicList, { TopicCard as SubtopicCard } from '../../components/TopicList/TopicList'
 import { AdminContainer, AdminLabel, RequiredAlert } from '../../styles/Forms'
 import { AddForm, FormFooter, Submit, TextInput } from '../../styles/Forms'
 import {
 	CenteredContainer,
 	ItemsCardButtons,
 	StyledItemsCardButton,
-} from '../../styles/Lists'
+} from '../../components/TopicList/TopicList.styles'
+import type { Topic } from '../topics/Topics.interfaces'
 import type {
 	AdminSubtopicsProps,
-	ISubtopic,
+	Subtopic,
 	SubtopicForm,
 } from './Subtopics.interfaces'
+import { EditSubtopicModal } from './components/EditSubtopic'
+import { useState } from 'react'
 
 const SubtopicsAdmin = (props: AdminSubtopicsProps) => {
 	const queryClient = useQueryClient()
@@ -24,26 +32,31 @@ const SubtopicsAdmin = (props: AdminSubtopicsProps) => {
 		register,
 		handleSubmit,
 		formState: { errors },
-	} = useForm<ISubtopic>()
+	} = useForm<Subtopic>()
 	// Add
 	const addMutation = useMutation({
 		mutationFn: addSubtopic,
 		onSuccess: async (newTopic) => {
-			queryClient.setQueryData<Array<ISubtopic> | undefined>(
+			queryClient.setQueryData<Array<Subtopic> | undefined>(
 				['subtopics'],
-				(old) => [newTopic, ...(old as Array<ISubtopic>)],
+				(old) => [newTopic, ...(old as Array<Subtopic>)],
 			)
 		},
 	})
 	// Update
-	// const updateMutation = useMutation(updateTopic, {
-	//   onSuccess: async (newTopic) => {
-	//     queryClient.setQueryData<Array<ITopic> | undefined>(['topics'], (old) => [
-	//       newTopic,
-	//       ...(old as Array<ITopic>),
-	//     ]);
-	//   },
-	// });
+	const updateMutation = useMutation({
+		mutationFn: ({
+			subtopic,
+			subtopicId,
+		}: { subtopic: SubtopicForm; subtopicId: number }) =>
+			updateSubtopic(subtopic, subtopicId),
+		onSuccess: async (newTopic) => {
+			queryClient.setQueryData<Array<Topic> | undefined>(['topics'], (old) => [
+				newTopic,
+				...(old as Array<Topic>),
+			])
+		},
+	})
 
 	// Delete
 	const deleteMutation = useMutation({
@@ -65,17 +78,21 @@ const SubtopicsAdmin = (props: AdminSubtopicsProps) => {
 		}
 	}
 
-	const handleDelete = async (topicId: number) => {
+	const handleDelete = (subtopicId: number) => {
 		if (window.confirm('Tem certeza de que quer remover este item?')) {
-			await deleteMutation.mutate(topicId)
+			deleteMutation.mutate(subtopicId)
 		}
 	}
-
+	const handleUpdate = (subtopicId: number) => {
+		setOpenModal(true)
+	}
+	const [openModal, setOpenModal] = useState(false)
 	return (
 		<>
+			<EditSubtopicModal/>
 			<AdminContainer>
 				<AddForm onSubmit={handleSubmit(onSubmit)}>
-					<AdminLabel htmlFor="topic_name">Nome do Tópico</AdminLabel>
+					<AdminLabel htmlFor="topic_name">Nome do Subtópico</AdminLabel>
 					<TextInput
 						type="text"
 						id="topic_name"
@@ -102,18 +119,18 @@ const SubtopicsAdmin = (props: AdminSubtopicsProps) => {
 					</FormFooter>
 				</AddForm>
 			</AdminContainer>
-			{/* Topics list */}
+			{/* Lista de Subtopicos */}
 			<CenteredContainer>
-				<List title="Subtópicos">
-					{props.subtopics.map((subtopic: ISubtopic) => (
-						<Card
+				<SubtopicList title="Subtópicos">
+					{props.subtopics.map((subtopic: Subtopic) => (
+						<SubtopicCard
 							key={subtopic.subtopic_id}
 							title={subtopic.subtopic_name}
 							description={subtopic.description}
 							link={`${subtopic.subtopic_id}/posts`}
 						>
 							<ItemsCardButtons>
-								<StyledItemsCardButton>
+								<StyledItemsCardButton onClick={() => handleUpdate}>
 									<HiOutlinePencilAlt size={20} />
 								</StyledItemsCardButton>
 
@@ -123,11 +140,10 @@ const SubtopicsAdmin = (props: AdminSubtopicsProps) => {
 									<HiOutlineTrash size={20} />
 								</StyledItemsCardButton>
 							</ItemsCardButtons>
-						</Card>
+						</SubtopicCard>
 					))}
-				</List>
+				</SubtopicList>
 			</CenteredContainer>
-			;
 		</>
 	)
 }

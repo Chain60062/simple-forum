@@ -15,6 +15,21 @@ export const Container = styled.div`
   box-shadow: 2px 2px 6px 0 rgba(0, 0, 0, 0.3);
 `
 
+export const Submit = styled.button`
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 8rem;
+  padding: 12px 16px;
+  margin: 12px;
+  border-radius: 8px;
+  font-size: 16px;
+  border: none;
+  outline: none;
+  background-color: #0f362b;
+  color: #349e81;
+`
+
 export const StyledGridForm = styled(Form)`
   padding: 30px;
   grid-template-columns: auto auto;
@@ -130,20 +145,6 @@ export const FormFooter = styled.div`
   width: 100%;
   height: 36px;
   margin-top: 12px;
-`
-export const Submit = styled.button`
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 8rem;
-  padding: 12px 16px;
-  margin: 12px;
-  border-radius: 8px;
-  font-size: 16px;
-  border: none;
-  outline: none;
-  background-color: #0f362b;
-  color: #349e81;
 `
 
 export const AdminContainer = styled.div`

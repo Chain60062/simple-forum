@@ -1,4 +1,8 @@
-import type { AddSubtopicParams } from '../subtopics/Subtopics.interfaces'
+import type {
+	AddSubtopicParams,
+	EditSubtopicParams,
+	SubtopicForm,
+} from '../pages/subtopics/Subtopics.interfaces'
 import { SERVER_URL } from '../util/config'
 
 export const addSubtopic = async ({ subtopic, topicId }: AddSubtopicParams) => {
@@ -29,9 +33,22 @@ export const deleteSubtopic = async (topicId: number) => {
 		},
 	})
 
-	if (!res?.ok) {
-		throw new Error('Erro inesperado na requisição.')
-	}
+	return res.json()
+}
+
+export const updateSubtopic = async (
+	subtopic: SubtopicForm,
+	subtopicId: number,
+) => {
+	const res = await fetch(`${SERVER_URL}/subtopics/${subtopicId}`, {
+		method: 'PUT ',
+		mode: 'cors',
+		credentials: 'include',
+		headers: {
+			'Content-Type': 'application/json',
+		},
+		body: JSON.stringify(subtopic),
+	})
 
 	return res.json()
 }

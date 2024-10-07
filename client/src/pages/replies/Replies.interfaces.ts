@@ -1,4 +1,4 @@
-export interface IReply {
+export interface Reply {
 	reply_id: string
 	message: string
 	parent_id?: string | null

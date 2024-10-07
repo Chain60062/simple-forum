@@ -1,15 +1,14 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { useContext } from 'react'
 import { useForm } from 'react-hook-form'
 import { HiOutlinePencilAlt, HiTrash } from 'react-icons/hi'
 import { useParams } from 'react-router-dom'
 import { toast } from 'sonner'
 import { addPost, getPosts } from '../../api/posts'
-import TopNav from '../../components/TopNav.js'
+import TopNav from '../../components/TopNav/TopNav.js'
 import { useUser } from '../../hooks/useUser.js'
-import { AddForm, FormFooter, Submit, TextInput } from '../../styles/Forms.js'
+import { AddForm, FormFooter, TextInput } from '../../styles/Forms.js'
 import Carousel from './Carousel.js'
-import type { IPost, PostForm, PostProps } from './Posts.interfaces.js'
+import type { Post, PostForm, PostProps } from './Posts.interfaces.js'
 import {
 	AddPostContainer,
 	Container,
@@ -20,6 +19,7 @@ import {
 	SidebarBody,
 	SidebarLink,
 	TextArea,
+	CreatePostButton
 } from './Posts.styles'
 
 const Posts = () => {
@@ -51,7 +51,7 @@ const Posts = () => {
 		if (subtopicId) {
 			mutate({ post, subtopicId: Number(subtopicId) })
 		} else {
-			throw new Response('Erro interno', { status: 500 })
+			toast.error('Não foi possível criar o post um erro inesperado ocorreu.')
 		}
 	}
 
@@ -79,7 +79,7 @@ const Posts = () => {
 								aria-invalid={errors.title ? 'true' : 'false'}
 							/>
 							{errors.title?.type === 'required' && (
-								<p role="alert">First name is required</p>
+								<p role="alert">Título é obrigatório</p>
 							)}
 							<label htmlFor="message">Mensagem</label>
 
@@ -89,7 +89,7 @@ const Posts = () => {
 								aria-invalid={errors.message ? 'true' : 'false'}
 							/>
 							{errors.message?.type === 'required' && (
-								<p role="alert">First name is required</p>
+								<p role="alert">Mensagem é obrigatória</p>
 							)}
 							<FileInput
 								type="file"
@@ -97,13 +97,13 @@ const Posts = () => {
 								{...register('files', { required: false, max: 3 })}
 							/>
 							<FormFooter>
-								<Submit type="submit">Postar</Submit>
+								<CreatePostButton type="submit">Postar</CreatePostButton>
 							</FormFooter>
 						</AddForm>
 					</AddPostContainer>
 				)}
-				{data.map((post: IPost) => (
-					<Post
+				{data.map((post: Post) => (
+					<SinglePost
 						key={post.post_id}
 						title={post.title}
 						message={post.message}
@@ -115,13 +115,13 @@ const Posts = () => {
 		</Container>
 	)
 }
-// A single post
-const Post = (props: PostProps) => {
+
+const SinglePost = ({title, files, link, message}: PostProps) => {
 	return (
 		<PostCard>
-			<h2>{props.title}</h2>
-			<Carousel images={props.files} link={props.link} />
-			<p>{props.message}</p>
+			<h2>{title}</h2>
+			<Carousel images={files} link={link} />
+			<p>{message}</p>
 			<PostFooter>
 				<HiOutlinePencilAlt size={2} />
 				<HiTrash size={2} />

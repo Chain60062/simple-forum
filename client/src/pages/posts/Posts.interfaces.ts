@@ -5,7 +5,7 @@ export type PostProps = {
 	link: string
 }
 
-export interface IPost {
+export interface Post {
 	post_id: string
 	profile_name: string
 	title: string
