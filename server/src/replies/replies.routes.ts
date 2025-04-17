@@ -9,7 +9,7 @@ import {
 const router = Router()
 
 router.get('/:postId', getPostReplies)
-router.post('/:postId/:parentId?', isAuthenticated, addReply)
+router.post('/:postId/{.:parentId}', isAuthenticated, addReply)
 router.patch('/:replyId', isAuthenticated, editReply)
 router.delete('/:replyId', isAuthenticated, deleteReply)
 

@@ -1,8 +1,5 @@
-import * as dotenv from 'dotenv'
 import pg from 'pg'
 import logger from '../utils/logger.js'
-
-dotenv.config()
 
 const connectionString = process.env.DATABASE_URI
 

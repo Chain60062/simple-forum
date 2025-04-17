@@ -11,7 +11,7 @@ const router = Router()
 
 router.post('/', upload.single('avatar'), createUser)
 router.put('/', upload.single('avatar'), editUser)
-router.delete('/', deleteUser)
+router.delete('/', deleteUser);
 router.get('/:username', getUserByUsername)
 router.post('/admin', createAdminAccount)
 
